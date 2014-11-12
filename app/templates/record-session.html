@@ -1,0 +1,25 @@
+<ion-view title="Session">
+  <ion-content has-header="true" padding="true">
+  	Session
+  	<div class="list card" ng-repeat="exercise in exercises">
+
+  		<div class="item item-divider">
+		    {{exercise.name}}
+		</div>
+
+	  <a class="item">
+	    Set 1
+	  </a>
+	  <a class="item">
+	    Set 2
+	  </a>
+	  <a class="item">
+	    Set 3
+	  </a>
+
+	</div>
+  	<div class="row">
+	  <div class="col col-33 col-offset-33 plus-icon" ng-click="addExercise()"><i class="icon ion-ios7-plus"></i></div>
+	</div>
+  </ion-content>
+</ion-view>

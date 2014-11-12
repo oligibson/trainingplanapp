@@ -1,0 +1,33 @@
+<ion-view title="Record">
+	<ion-content class="has-header padding">
+		<div class="list list-inset">
+			<label class="item item-input item-select">
+				<div class="input-label">
+					Activity
+				</div>
+				<select ng-model="session.activity">
+					<option selected>None</option>
+					<option>Gym</option>
+					<option>Run</option>
+					<option>Cycle</option>
+				</select>
+			</label>
+			<label class="item item-input item-select">
+				<div class="input-label">
+					Type
+				</div>
+				<select ng-model="session.type">
+					<option selected>None</option>
+					<option>HIIT</option>
+					<option>Interval</option>
+					<option>Endurance</option>
+					<option>Strength</option>
+					<option>Power</option>
+				</select>
+			</label>
+		</div>
+		<button class="button button-block button-outline button-positive" ng-click="createSession()">
+			{{ button }}
+		</button>
+	</ion-content>
+</ion-view>

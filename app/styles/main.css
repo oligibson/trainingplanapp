@@ -1,0 +1,16 @@
+/* Your application styles go here */
+.loading-container .loading {
+	background-color: transparent;
+	color: #5E5E5E;
+	font-size: 35px;
+}
+
+.plus-icon{
+	text-align: center;
+	font-size: 32px;
+	color: #145fd7;
+}
+
+.tab-item-active{
+	color: #145fd7;
+}

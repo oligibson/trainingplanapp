@@ -1,0 +1,16 @@
+<ion-view title="Feed">
+	<ion-content class="has-header">
+		<ion-refresher
+		    pulling-text="Pull to refresh..."
+		    on-refresh="Refresh()">
+		</ion-refresher>
+		<ion-list>
+			<ion-item class="item item-icon-left item-icon-right" ng-repeat="session in sessions | orderBy:'date':true" type="item-text-wrap" href="#/tab/feed/{{session._id}}">
+				<i class="icon ion-ios7-pulse-strong"></i>
+				{{session.activity}}
+				<span class="item-note">{{ session.date | date:'dd/mm/yyyy' }}</span>
+				<i class="icon ion-ios7-arrow-right"></i>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>
