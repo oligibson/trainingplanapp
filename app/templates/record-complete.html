@@ -1,0 +1,15 @@
+<ion-view title="Save">
+	<ion-nav-buttons side="right">
+		<a class="button button-icon icon ion-ios7-trash-outline" ng-click="deleteSession()"></a>
+	</ion-nav-buttons>
+	<ion-content has-header="true" padding="true">
+		<div class="list list-inset">
+			<label class="item item-input">
+				<input type="text" placeholder="Comments">
+			</label>
+		</div>
+		<button class="button button-block button-outline button-positive" ng-click="saveSession()">
+			{{ button }}
+		</button>
+	</ion-content>
+</ion-view>

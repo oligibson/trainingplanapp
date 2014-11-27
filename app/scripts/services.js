@@ -38,6 +38,35 @@ angular.module('Training.services')
         data: params,
         headers: {'Content-Type': 'application/json'}
       }).then(function (result){
+        localStorage.setItem('currentSession', JSON.stringify(result.data));
+        deferred.resolve(result.data);
+      }, function (error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    };
+
+    this.getCurrentSession = function(){
+      var currentSession = JSON.parse(localStorage.getItem('currentSession'));
+      return currentSession;
+    };
+
+    this.updateCurrentSession = function(session){
+      localStorage.setItem('currentSession', JSON.stringify(session));
+    };
+
+    this.deleteCurrentSession = function(){
+      localStorage.removeItem('currentSession');
+    };
+
+    this.deleteCurrentServerSession = function(sessionId){
+      var deferred = $q.defer();
+      $http({
+        method: 'DELETE',
+        url: 'http://trainingplanserver.herokuapp.com/api/sessions/' + sessionId,
+        headers: {'Content-Type': 'application/json'}
+      }).then(function(result){
+        console.log(result);
         deferred.resolve(result.data);
       }, function (error){
         deferred.reject(error);

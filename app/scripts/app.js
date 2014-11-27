@@ -6,7 +6,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('Training', ['ionic', 'config', 'Training.controllers', 'Training.services'])
+angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controllers', 'Training.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -70,11 +70,21 @@ angular.module('Training', ['ionic', 'config', 'Training.controllers', 'Training
     })
 
     .state('tab.record-session', {
-      url: '/record/:sessionId',
+      url: '/record/session',
       views: {
         'tab-record': {
           templateUrl: 'templates/record-session.html',
           controller: 'RecordSessionCtrl'
+        }
+      }
+    })
+
+    .state('tab.record-complete', {
+      url: '/record/session/complete',
+      views: {
+        'tab-record': {
+          templateUrl: 'templates/record-complete.html',
+          controller: 'RecordCompleteCtrl'
         }
       }
     })
