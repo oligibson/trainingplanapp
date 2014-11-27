@@ -8,7 +8,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controllers', 'Training.services'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $cordovaStatusbar) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -17,7 +17,8 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
     }
     if(window.StatusBar) {
       // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
+      StatusBar.styleLightContent();
+      StatusBar.show();
     }
   });
 })

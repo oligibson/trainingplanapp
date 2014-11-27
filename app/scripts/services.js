@@ -1,34 +1,8 @@
 'use strict';
 angular.module('Training.services', [])
 
-/**
- * A simple example service that returns some data.
- */
-.factory('Friends', function() {
-  // Might use a resource here that returns a JSON array
-
-  // Some fake testing data
-  var friends = [
-    { id: 0, name: 'Scruff McGruff' },
-    { id: 1, name: 'G.I. Joe' },
-    { id: 2, name: 'Miss Frizzle' },
-    { id: 3, name: 'Ash Ketchum' }
-  ];
-
-  return {
-    all: function() {
-      return friends;
-    },
-    get: function(friendId) {
-      // Simple index lookup
-      return friends[friendId];
-    }
-  };
-});
-
-angular.module('Training.services')
   .service('Record', function ($q, $http) {
-    // AngularJS will instantiate a singleton by calling "new" on this function
+    
     this.create = function(data){
       var deferred = $q.defer();
       var params = JSON.stringify(data);
@@ -76,8 +50,6 @@ angular.module('Training.services')
   })
 
   .service('Feed', function ($q, $http) {
-    // AngularJS will instantiate a singleton by calling "new" on this function
-    var currentSessions;
     
     this.getAll = function(user){
       var deferred = $q.defer();
@@ -86,7 +58,7 @@ angular.module('Training.services')
         url: 'http://trainingplanserver.herokuapp.com/api/users/'+user+'/sessions',
         headers: {'Content-Type': 'application/json'}
       }).then(function (result){
-        currentSessions = result.data;
+        localStorage.setItem('sessions', JSON.stringify(result.data));
         deferred.resolve(result.data);
       }, function (error){
         deferred.reject(error);
@@ -95,6 +67,7 @@ angular.module('Training.services')
     };
 
     this.getCurrent = function(sessionId) {
+      var currentSessions = JSON.parse(localStorage.getItem('sessions'));
       // Simple index lookup
       for(var i=0; i < currentSessions.length; i++){
         if(currentSessions[i]._id === sessionId){
@@ -102,6 +75,11 @@ angular.module('Training.services')
         }
       }
       return;
+    };
+
+    this.getLocal = function() {
+      var currentSessions = JSON.parse(localStorage.getItem('sessions'));
+      return currentSessions;
     };
 
   })

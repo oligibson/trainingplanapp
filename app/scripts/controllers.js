@@ -6,8 +6,8 @@ angular.module('Training.controllers', [])
 	$scope.Refresh = function (){
 		
 		Feed.getAll('542fee894e51797a026a87ae')
-	    .then(function(result) {
-			$scope.sessions = result;
+	    .then(function() {
+			$scope.sessions = Feed.getLocal();
 			$scope.$broadcast('scroll.refreshComplete');
 		}, function (error){
 			console.log(error);
@@ -15,20 +15,24 @@ angular.module('Training.controllers', [])
 	};
 
 	$scope.getSessions = function (){
-		$ionicLoading.show({
-			templateUrl: 'templates/loading.html',
-			noBackdrop: true
-		});
-		Feed.getAll('542fee894e51797a026a87ae').then(function (result){
-			console.log(result);
-			$ionicLoading.hide();
-			$scope.sessions = result;
+		
+		$scope.sessions = Feed.getLocal();
+		
+		Feed.getAll('542fee894e51797a026a87ae').then(function (){
+			$scope.sessions = Feed.getLocal();
 		}, function (error){
 			console.log(error);
 		});
+
 	};
 
 	$scope.getSessions();
+})
+
+.controller('SessionDetailCtrl', function($scope, $stateParams, Feed) {
+
+	$scope.session = Feed.getCurrent($stateParams.sessionId);
+
 })
 
 .controller('RecordCtrl', function($scope, $location, $ionicTabsDelegate, Record) {
@@ -84,6 +88,7 @@ angular.module('Training.controllers', [])
 
 	$scope.saveSession = function (){
 		$scope.button = 'Please Wait...';
+		Record.deleteCurrentSession();
 		$location.path('/tab/record');
 	};
 
@@ -102,14 +107,6 @@ angular.module('Training.controllers', [])
 			}
 		});
 	};
-
-})
-
-.controller('SessionDetailCtrl', function($scope, $stateParams, Feed) {
-
-	console.log($stateParams.sessionId);
-	$scope.session = Feed.getCurrent($stateParams.sessionId);
-	console.log($scope.session);
 
 })
 
