@@ -13,6 +13,40 @@ angular.module('Training.services', [])
         headers: {'Content-Type': 'application/json'}
       }).then(function (result){
         localStorage.setItem('currentSession', JSON.stringify(result.data));
+        console.log(result.data);
+        deferred.resolve(result.data);
+      }, function (error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    };
+
+    this.completeSession = function(data){
+      var deferred = $q.defer();
+      var params = JSON.stringify(data);
+      console.log(params);
+      $http({
+        method: 'PUT',
+        url: 'http://trainingplanserver.herokuapp.com/api/sessions/' + data._id,
+        data: params,
+        headers: {'Content-Type': 'application/json'}
+      }).then(function (result){
+        console.log(result.data);
+        deferred.resolve(result.data);
+      }, function (error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    };
+
+    this.deleteCurrentServerSession = function(sessionId){
+      var deferred = $q.defer();
+      $http({
+        method: 'DELETE',
+        url: 'http://trainingplanserver.herokuapp.com/api/sessions/' + sessionId,
+        headers: {'Content-Type': 'application/json'}
+      }).then(function(result){
+        console.log(result);
         deferred.resolve(result.data);
       }, function (error){
         deferred.reject(error);
@@ -33,20 +67,6 @@ angular.module('Training.services', [])
       localStorage.removeItem('currentSession');
     };
 
-    this.deleteCurrentServerSession = function(sessionId){
-      var deferred = $q.defer();
-      $http({
-        method: 'DELETE',
-        url: 'http://trainingplanserver.herokuapp.com/api/sessions/' + sessionId,
-        headers: {'Content-Type': 'application/json'}
-      }).then(function(result){
-        console.log(result);
-        deferred.resolve(result.data);
-      }, function (error){
-        deferred.reject(error);
-      });
-      return deferred.promise;
-    };
   })
 
   .service('Feed', function ($q, $http) {

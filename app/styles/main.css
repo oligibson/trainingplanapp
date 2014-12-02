@@ -28,6 +28,42 @@
 	border-color: #ddd;
 }
 
+.profile-img{
+	width: 140px;
+	margin-top: 15px;
+}
+
+.profile-bar{
+	padding: 0px;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+}
+
+.profile-bar > div:nth-child(2){
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+}
+
+.profile-bar h3{
+	color: #145fd7;
+	margin-bottom: 5px;
+}
+
+.profile-bar h6{
+	color: #343434;
+	margin: 0 0 5px 0;
+}
+
+.profile-header h3{
+	color: #145fd7;
+	margin-bottom: 5px;
+}
+
+.profile-header h6{
+	color: #343434;
+	margin: 0 0 20px 0;
+}
+
 /* TEXT STYLING */
 
 .text-right{
@@ -38,5 +74,28 @@
 	text-align: left;
 }
 
-  .button-clear.active, .button-clear.activated {
-    opacity: 1; }
+.text-center {
+  text-align: center;
+}
+
+.button-clear.active, .button-clear.activated {
+    opacity: 1; 
+}
+
+.center-block {
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.pull-right {
+	float: right !important;
+}
+
+.pull-left {
+	float: left !important;
+}
+
+.img-circle {
+	border-radius: 50%;
+}

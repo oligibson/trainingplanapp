@@ -88,8 +88,15 @@ angular.module('Training.controllers', [])
 
 	$scope.saveSession = function (){
 		$scope.button = 'Please Wait...';
-		Record.deleteCurrentSession();
-		$location.path('/tab/record');
+		$scope.session.completed = true;
+		console.log($scope.session);
+		Record.completeSession($scope.session).then(function(result){
+			console.log(result);
+			Record.deleteCurrentSession();
+			$location.path('/tab/record');
+		}, function (error){
+			console.log(error);
+		});
 	};
 
 	$scope.deleteSession = function (){
@@ -110,7 +117,7 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('ProfileCtrl', function($scope, $ionicLoading, Profile) {
+.controller('ProfileCtrl', function($scope, $ionicLoading, Profile, Feed) {
 
 	$scope.id = '542fee894e51797a026a87ae';
 
@@ -127,6 +134,20 @@ angular.module('Training.controllers', [])
 			console.log(error);
 		});
 	};
+
+	$scope.getSessions = function (){
+		
+		$scope.sessions = Feed.getLocal();
+		
+		Feed.getAll('542fee894e51797a026a87ae').then(function (){
+			$scope.sessions = Feed.getLocal();
+		}, function (error){
+			console.log(error);
+		});
+
+	};
+
+	$scope.getSessions();
 
 	$scope.getUser();
 
