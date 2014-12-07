@@ -57,7 +57,7 @@ angular.module('Training.controllers', [])
 
 	$scope.addExercise = function (){
 		console.log('adding exercise');
-		$scope.session.exercises.push({name: 'Chins', setNo: 1, sets: [{reps: 10, weight: 0}]});
+		$scope.session.exercises.push({setNo: 1, sets: [{reps: 0, weight: 0}]});
 		Record.updateCurrentSession($scope.session);
 	};
 
@@ -66,6 +66,7 @@ angular.module('Training.controllers', [])
 		var newSet = exercise.sets[exercise.sets.length -1];
 		console.log(newSet);
 		$scope.session.exercises[index].sets.push({reps: newSet.reps, weight: newSet.weight});
+		$scope.session.exercises[index].setNo = $scope.session.exercises[index].setNo + 1;
 		Record.updateCurrentSession($scope.session);
 	};
 

@@ -14,14 +14,14 @@
 		<div class="list card" ng-repeat="exercise in session.exercises" on-swipe-right="deleteExercise($index)" on-swipe-left="deleteExercise($index)">
 
 			<div class="item item-divider item-divider-record">
-				<span contenteditable="true">{{exercise.name}}</span>
+				<input type="text" class="form-control exercise-input" placeholder="Exercise Name" ng-model="exercise.name">
 				<span class="pull-right set-plus icon ion-ios7-plus-empty" ng-click="addSet(exercise, $index)"></span>
 			</div>
 
 			<a class="item" ng-repeat="set in exercise.sets">
 				<div class="row no-padding">
 					<div class="col no-padding flex">
-				      <input type="text" class="form-control reps-input"ng-model="set.reps">
+				      <input type="text" class="form-control reps-input" ng-model="set.reps" pattern="[0-9]*">
 				      <span class="input-group-addon reps">reps</span>
 				    </div>
 					<div class="col no-padding flex">
