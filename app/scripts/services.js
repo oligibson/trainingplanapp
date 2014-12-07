@@ -78,6 +78,7 @@ angular.module('Training.services', [])
         url: 'http://trainingplanserver.herokuapp.com/api/users/'+user+'/sessions',
         headers: {'Content-Type': 'application/json'}
       }).then(function (result){
+        localStorage.removeItem('sessions');
         localStorage.setItem('sessions', JSON.stringify(result.data));
         deferred.resolve(result.data);
       }, function (error){

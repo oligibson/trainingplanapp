@@ -51,14 +51,38 @@ angular.module('Training.controllers', [])
 	};
 })
 
-.controller('RecordSessionCtrl', function($scope, $ionicPopup, $cordovaDialogs, $location, Record) {
+.controller('RecordSessionCtrl', function($scope, $ionicActionSheet, $ionicPopup, $cordovaDialogs, $location, Record) {
 
 	$scope.session = Record.getCurrentSession();
 
 	$scope.addExercise = function (){
 		console.log('adding exercise');
-		$scope.session.exercises.push({name: 'Chins', setNo: 2});
+		$scope.session.exercises.push({name: 'Chins', setNo: 1, sets: [{reps: 10, weight: 0}]});
 		Record.updateCurrentSession($scope.session);
+	};
+
+	$scope.addSet = function (exercise, index){
+		console.log('adding set');
+		var newSet = exercise.sets[exercise.sets.length -1];
+		console.log(newSet);
+		$scope.session.exercises[index].sets.push({reps: newSet.reps, weight: newSet.weight});
+		Record.updateCurrentSession($scope.session);
+	};
+
+	$scope.deleteExercise = function (index){
+		$ionicActionSheet.show({
+			titleText: 'Are you sure you want to delete this exercise?',
+			destructiveText: 'Delete',
+			cancelText: 'Cancel',
+			cancel: function(){
+				return true;
+			},
+			destructiveButtonClicked: function(){
+				$scope.session.exercises.splice(index, 1);
+				Record.updateCurrentSession($scope.session);
+				return true;
+			}
+		});
 	};
 
 	$scope.completeSession = function (){

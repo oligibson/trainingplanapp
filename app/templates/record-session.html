@@ -11,20 +11,24 @@
 				<div class="col text-right">{{session.date | date:'dd/MM/yyyy'}}</div>
 			</div>
 		</div>
-		<div class="list card" ng-repeat="exercise in session.exercises">
+		<div class="list card" ng-repeat="exercise in session.exercises" on-swipe-right="deleteExercise($index)" on-swipe-left="deleteExercise($index)">
 
-			<div class="item item-divider">
-				{{exercise.name}}
+			<div class="item item-divider item-divider-record">
+				<span contenteditable="true">{{exercise.name}}</span>
+				<span class="pull-right set-plus icon ion-ios7-plus-empty" ng-click="addSet(exercise, $index)"></span>
 			</div>
 
-			<a class="item">
-				Set 1
-			</a>
-			<a class="item">
-				Set 2
-			</a>
-			<a class="item">
-				Set 3
+			<a class="item" ng-repeat="set in exercise.sets">
+				<div class="row no-padding">
+					<div class="col no-padding flex">
+				      <input type="text" class="form-control reps-input"ng-model="set.reps">
+				      <span class="input-group-addon reps">reps</span>
+				    </div>
+					<div class="col no-padding flex">
+				      <input type="text" class="form-control weight-input" pattern="[0-9]*" ng-model="set.weight">
+				      <span class="input-group-addon">kg</span>
+				    </div>
+				</div>
 			</a>
 		</div>
 		<div class="row">
