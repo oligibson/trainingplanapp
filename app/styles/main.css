@@ -87,37 +87,36 @@ fieldset[disabled] .form-control {
 .profile-img{
 	width: 140px;
 	margin-top: 15px;
+	border: 2px solid #fff;
+	padding: 5px;
 }
 
 .profile-bar{
 	padding: 0px;
-	border-top: 1px solid #ddd;
-	border-bottom: 1px solid #ddd;
-}
-
-.profile-bar > div:nth-child(2){
-	border-left: 1px solid #ddd;
-	border-right: 1px solid #ddd;
 }
 
 .profile-bar h3{
-	color: #145fd7;
+	color: #fff;
 	margin-bottom: 5px;
 }
 
 .profile-bar h6{
-	color: #343434;
+	color: #EDFDFD;
 	margin: 0 0 5px 0;
 }
 
 .profile-header h3{
-	color: #145fd7;
+	color: #fff;
 	margin-bottom: 5px;
 }
 
 .profile-header h6{
-	color: #343434;
+	color: #EDFDFD;
 	margin: 0 0 20px 0;
+}
+
+.profile-background{
+	background-color: #4a87ee;
 }
 
 .weight-input{

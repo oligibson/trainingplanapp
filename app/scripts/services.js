@@ -75,9 +75,10 @@ angular.module('Training.services', [])
       var deferred = $q.defer();
       $http({
         method: 'GET',
-        url: 'http://trainingplanserver.herokuapp.com/api/users/'+user+'/sessions',
+        url: 'https://trainingplanserver.herokuapp.com/api/users/'+user+'/sessions',
         headers: {'Content-Type': 'application/json'}
       }).then(function (result){
+        console.log(result);
         localStorage.removeItem('sessions');
         localStorage.setItem('sessions', JSON.stringify(result.data));
         deferred.resolve(result.data);
