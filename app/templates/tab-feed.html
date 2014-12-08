@@ -1,15 +1,22 @@
 <ion-view title="Feed">
+	<ion-nav-buttons side="left">
+		<button class="button button-clear button-light" ng-click="toggleDelete()">
+        	{{deleteButton}}
+    	</button>
+  	</ion-nav-buttons>
 	<ion-content class="has-header">
 		<ion-refresher
 		    pulling-text="Pull to refresh..."
 		    on-refresh="Refresh()">
 		</ion-refresher>
-		<ion-list>
+		<ion-list show-delete="showDelete">
 			<ion-item class="item item-icon-left item-icon-right" ng-repeat="session in sessions | orderBy:'date':true" type="item-text-wrap" href="#/tab/feed/{{session._id}}">
 				<i class="icon ion-ios7-pulse-strong"></i>
 				{{session.activity}}
 				<span class="item-note">{{ session.date | date:'dd/MM/yyyy' }}</span>
 				<i class="icon ion-ios7-arrow-right"></i>
+				<ion-delete-button class="ion-minus-circled" ng-click="delete(session)">
+    			</ion-delete-button>
 			</ion-item>
 		</ion-list>
 	</ion-content>

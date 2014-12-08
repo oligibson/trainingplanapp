@@ -1,7 +1,10 @@
 'use strict';
 angular.module('Training.controllers', [])
 
-.controller('FeedCtrl', function($scope, $ionicLoading, $ionicTabsDelegate, Feed) {
+.controller('FeedCtrl', function($scope, $ionicLoading, $ionicTabsDelegate, Feed, Record) {
+
+	$scope.deleteButton = 'Edit';
+	$scope.showDelete = false;
 
 	$scope.Refresh = function (){
 		
@@ -12,6 +15,23 @@ angular.module('Training.controllers', [])
 		}, function (error){
 			console.log(error);
 		});
+	};
+
+	$scope.toggleDelete = function(){
+		if($scope.showDelete === false){
+			$scope.showDelete = true;
+			$scope.deleteButton = 'Done';
+		}else{
+			$scope.showDelete = false;
+			$scope.deleteButton = 'Edit';
+			// Refresh local storage from server
+		}
+	};
+
+	$scope.delete = function(session){
+		Feed.deleteLocalSession(session._id);
+		$scope.sessions = Feed.getLocal();
+		Record.deleteCurrentServerSession(session._id);
 	};
 
 	$scope.getSessions = function (){

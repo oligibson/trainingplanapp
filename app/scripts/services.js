@@ -98,6 +98,19 @@ angular.module('Training.services', [])
       return;
     };
 
+    this.deleteLocalSession = function(sessionId) {
+      var currentSessions = JSON.parse(localStorage.getItem('sessions'));
+      // Simple index lookup
+      for(var i=0; i < currentSessions.length; i++){
+        if(currentSessions[i]._id === sessionId){
+          currentSessions.splice(i,1);
+          localStorage.setItem('sessions', JSON.stringify(currentSessions));
+          return;
+        }
+      }
+      return;
+    };
+
     this.getLocal = function() {
       var currentSessions = JSON.parse(localStorage.getItem('sessions'));
       return currentSessions;
