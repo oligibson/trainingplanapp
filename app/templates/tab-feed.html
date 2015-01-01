@@ -11,7 +11,8 @@
 		</ion-refresher>
 		<ion-list show-delete="showDelete">
 			<ion-item class="item item-icon-left item-icon-right" ng-repeat="session in sessions | orderBy:'date':true" type="item-text-wrap" href="#/tab/feed/{{session._id}}">
-				<i class="icon ion-ios7-pulse-strong"></i>
+				<i class="icon icon-icon-dumbbell"></i>
+				<!--<i class="icon ion-ios7-pulse-strong"></i>-->
 				{{session.activity}}
 				<span class="item-note">{{ session.date | date:'dd/MM/yyyy' }}</span>
 				<i class="icon ion-ios7-arrow-right"></i>

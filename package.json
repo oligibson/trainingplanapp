@@ -51,6 +51,7 @@
     "org.apache.cordova.statusbar",
     "org.apache.cordova.console",
     "https://github.com/apache/cordova-plugin-splashscreen.git",
-    "org.apache.cordova.dialogs"
+    "org.apache.cordova.dialogs",
+    "http://github.com/VitaliiBlagodir/cordova-plugin-datepicker"
   ]
 }

@@ -1,7 +1,7 @@
 'use strict';
 angular.module('Training.controllers', [])
 
-.controller('FeedCtrl', function($scope, $ionicLoading, $ionicTabsDelegate, Feed, Record) {
+.controller('FeedCtrl', function($scope, $ionicLoading, $ionicTabsDelegate, $ionicActionSheet, Feed, Record) {
 
 	$scope.deleteButton = 'Edit';
 	$scope.showDelete = false;
@@ -29,9 +29,20 @@ angular.module('Training.controllers', [])
 	};
 
 	$scope.delete = function(session){
-		Feed.deleteLocalSession(session._id);
-		$scope.sessions = Feed.getLocal();
-		Record.deleteCurrentServerSession(session._id);
+		$ionicActionSheet.show({
+			titleText: 'Are you sure you want to delete this session?',
+			destructiveText: 'Delete',
+			cancelText: 'Cancel',
+			cancel: function(){
+				return true;
+			},
+			destructiveButtonClicked: function(){
+				Feed.deleteLocalSession(session._id);
+				$scope.sessions = Feed.getLocal();
+				Record.deleteCurrentServerSession(session._id);
+				return true;
+			}
+		});
 	};
 
 	$scope.getSessions = function (){
@@ -195,5 +206,11 @@ angular.module('Training.controllers', [])
 	$scope.getSessions();
 
 	$scope.getUser();
+
+})
+
+.controller('ProfileSettingsCtrl', function() {
+
+	
 
 });

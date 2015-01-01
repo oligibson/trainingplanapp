@@ -98,6 +98,16 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
           controller: 'ProfileCtrl'
         }
       }
+    })
+
+    .state('tab.profile-settings', {
+      url: '/profile/settings',
+      views: {
+        'tab-profile': {
+          templateUrl: 'templates/profile-settings.html',
+          controller: 'ProfileSettingsCtrl'
+        }
+      }
     });
 
   // if none of the above states are matched, use this as the fallback
