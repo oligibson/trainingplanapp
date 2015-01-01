@@ -68,7 +68,7 @@ angular.module('Training.controllers', [])
 
 .controller('RecordCtrl', function($scope, $location, $ionicTabsDelegate, Record) {
 
-	$scope.session = { id: '542fee894e51797a026a87ae'};
+	$scope.session = { id: '542fee894e51797a026a87ae', activity: 'Gym'};
 	$scope.button = 'Record Session';
 
 	$scope.createSession = function (){
