@@ -55,8 +55,7 @@ angular.module('Training.services', [])
     };
 
     this.getCurrentSession = function(){
-      var currentSession = JSON.parse(localStorage.getItem('currentSession'));
-      return currentSession;
+      return JSON.parse(localStorage.getItem('currentSession'));
     };
 
     this.updateCurrentSession = function(session){

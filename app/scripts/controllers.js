@@ -66,7 +66,7 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('RecordCtrl', function($scope, $location, $ionicTabsDelegate, Record) {
+.controller('RecordCtrl', function($scope, $location, $ionicHistory, $ionicTabsDelegate, Record) {
 
 	$scope.session = { id: '542fee894e51797a026a87ae', activity: 'Gym'};
 	$scope.button = 'Record Session';
@@ -75,8 +75,13 @@ angular.module('Training.controllers', [])
 		$scope.button = 'Please Wait...';
 		$scope.session.date = new Date();
 		Record.create($scope.session).then(function (){
+			$scope.button = 'Record Session';
+			$ionicHistory.nextViewOptions({
+				disableBack: true
+			});
 			$location.path('/tab/record/session');
 		}, function (error){
+			$scope.button = 'Record Session';
 			console.log(error);
 		});
 	};
@@ -127,17 +132,19 @@ angular.module('Training.controllers', [])
 					Record.deleteCurrentServerSession($scope.session._id);
 					$location.path('/tab/record');
 				}else if(buttonIndex === 2){
+					$scope.session = {};
 					$location.path('/tab/record/session/complete');
 				}
 			});
 		}else{
+			$scope.session = {};
 			$location.path('/tab/record/session/complete');
 		}
 	};
 
 })
 
-.controller('RecordCompleteCtrl', function($scope, $ionicActionSheet, $location, Record) {
+.controller('RecordCompleteCtrl', function($scope, $ionicActionSheet, $ionicHistory, $location, Record) {
 
 	$scope.session = Record.getCurrentSession();
 	$scope.button = 'Save Session';
@@ -149,6 +156,10 @@ angular.module('Training.controllers', [])
 		Record.completeSession($scope.session).then(function(result){
 			console.log(result);
 			Record.deleteCurrentSession();
+			$ionicHistory.nextViewOptions({
+				historyRoot: true,
+				disableBack: true
+			});
 			$location.path('/tab/record');
 		}, function (error){
 			console.log(error);
@@ -166,6 +177,10 @@ angular.module('Training.controllers', [])
 			destructiveButtonClicked: function(){
 				Record.deleteCurrentSession();
 				Record.deleteCurrentServerSession($scope.session._id);
+				$ionicHistory.nextViewOptions({
+					historyRoot: true,
+					disableBack: true
+				});
 				$location.path('/tab/record');
 			}
 		});
