@@ -61,6 +61,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
     })
 
     .state('tab.record', {
+      cache: false,
       url: '/record',
       views: {
         'tab-record': {
@@ -71,6 +72,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
     })
 
     .state('tab.record-session', {
+      cache: false,
       url: '/record/session',
       views: {
         'tab-record': {
@@ -81,6 +83,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
     })
 
     .state('tab.record-complete', {
+      cache: false,
       url: '/record/session/complete',
       views: {
         'tab-record': {

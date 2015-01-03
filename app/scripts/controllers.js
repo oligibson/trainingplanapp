@@ -98,9 +98,7 @@ angular.module('Training.controllers', [])
 	};
 
 	$scope.addSet = function (exercise, index){
-		console.log('adding set');
 		var newSet = exercise.sets[exercise.sets.length -1];
-		console.log(newSet);
 		$scope.session.exercises[index].sets.push({reps: newSet.reps, weight: newSet.weight});
 		$scope.session.exercises[index].setNo = $scope.session.exercises[index].setNo + 1;
 		Record.updateCurrentSession($scope.session);
@@ -132,12 +130,10 @@ angular.module('Training.controllers', [])
 					Record.deleteCurrentServerSession($scope.session._id);
 					$location.path('/tab/record');
 				}else if(buttonIndex === 2){
-					$scope.session = {};
 					$location.path('/tab/record/session/complete');
 				}
 			});
 		}else{
-			$scope.session = {};
 			$location.path('/tab/record/session/complete');
 		}
 	};

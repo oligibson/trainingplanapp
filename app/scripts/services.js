@@ -8,7 +8,7 @@ angular.module('Training.services', [])
       var params = JSON.stringify(data);
       $http({
         method: 'POST',
-        url: 'http://trainingplanserver.herokuapp.com/api/sessions/create',
+        url: 'http://trainingplanserver.herokuapp.com/api/sessions',
         data: params,
         headers: {'Content-Type': 'application/json'}
       }).then(function (result){
@@ -55,7 +55,9 @@ angular.module('Training.services', [])
     };
 
     this.getCurrentSession = function(){
-      return JSON.parse(localStorage.getItem('currentSession'));
+      var session = JSON.parse(localStorage.getItem('currentSession'));
+      console.log(session);
+      return session;
     };
 
     this.updateCurrentSession = function(session){
