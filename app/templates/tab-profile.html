@@ -42,7 +42,7 @@
 		    <ion-scroll zooming="false" direction="y" scrollbar-y="false">
 				<ion-item class="item item-icon-left item-icon-right" ng-repeat="session in sessions | orderBy:'date':true | limitTo:5" type="item-text-wrap" href="#/tab/feed/{{session._id}}">
 					<i class="icon icon-icon-dumbbell"></i>
-					{{session.activity}}
+					{{session.name}}
 					<span class="item-note">{{ session.date | date:'dd/MM/yyyy' }}</span>
 					<i class="icon ion-ios7-arrow-right"></i>
 				</ion-item>

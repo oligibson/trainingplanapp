@@ -68,7 +68,7 @@ angular.module('Training.controllers', [])
 
 .controller('RecordCtrl', function($scope, $location, $ionicHistory, $ionicTabsDelegate, Record) {
 
-	$scope.session = { id: '542fee894e51797a026a87ae', activity: 'Gym'};
+	$scope.session = { id: '542fee894e51797a026a87ae', activity: 'Gym', name: Record.sessionName()};
 	$scope.button = 'Record Session';
 
 	$scope.createSession = function (){
@@ -187,17 +187,12 @@ angular.module('Training.controllers', [])
 .controller('ProfileCtrl', function($scope, $ionicLoading, Profile, Feed) {
 
 	$scope.id = '542fee894e51797a026a87ae';
+	//$scope.user = Profile.getLocalUser();
 
 	$scope.getUser = function (){
-		$ionicLoading.show({
-			templateUrl: 'templates/loading.html',
-			noBackdrop: true
-		});
-		Profile.getUser($scope.id).then(function (result){
-			$scope.user = result;
-			$ionicLoading.hide();
+		Profile.getUser($scope.id).then(function (){
+			$scope.user = Profile.getLocalUser();
 		}, function (error){
-			$ionicLoading.hide();
 			console.log(error);
 		});
 	};
@@ -220,8 +215,8 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('ProfileSettingsCtrl', function() {
+.controller('ProfileSettingsCtrl', function($scope, Profile) {
 
-	
+	$scope.user = Profile.getLocalUser();
 
 });

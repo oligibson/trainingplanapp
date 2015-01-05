@@ -94,6 +94,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
     })
 
     .state('tab.profile', {
+      cache: false,
       url: '/profile',
       views: {
         'tab-profile': {
@@ -104,6 +105,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
     })
 
     .state('tab.profile-settings', {
+      cache: false,
       url: '/profile/settings',
       views: {
         'tab-profile': {

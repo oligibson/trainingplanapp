@@ -68,6 +68,26 @@ angular.module('Training.services', [])
       localStorage.removeItem('currentSession');
     };
 
+    this.sessionName = function() {
+      var myDate = new Date();
+  
+      if ( myDate.getHours() < 12 ){
+        return 'Morning Session';
+      }
+      else if ( myDate.getHours() >= 12 && myDate.getHours() < 14 ){
+        return 'Lunch Session';
+      }
+      else if ( myDate.getHours() >= 14 && myDate.getHours() < 18 ){
+        return 'Afternoon Session';
+      }
+      else if ( myDate.getHours() >= 18 && myDate.getHours() <= 24 ){
+        return 'Evening Session';
+      }
+      else{
+        return;
+      }
+    };
+
   })
 
   .service('Feed', function ($q, $http) {
@@ -129,11 +149,18 @@ angular.module('Training.services', [])
         url: 'http://trainingplanserver.herokuapp.com/api/users/'+user,
         headers: {'Content-Type': 'application/json'}
       }).then(function (result){
+        localStorage.removeItem('user');
+        localStorage.setItem('user', JSON.stringify(result.data));
         deferred.resolve(result.data);
       }, function (error){
         deferred.reject(error);
       });
       return deferred.promise;
+    };
+
+    this.getLocalUser = function() {
+      var currentUser = JSON.parse(localStorage.getItem('user'));
+      return currentUser;
     };
 
   });
