@@ -1,6 +1,22 @@
 'use strict';
 angular.module('Training.controllers', [])
 
+.controller('LoginCtrl', function($scope, $state) {
+
+	$scope.login = function (){
+		$state.go('tab.feed');
+	};
+
+	$scope.signUp = function (){
+		$state.go('signup');
+	};
+
+})
+
+.controller('SignupCtrl', function() {
+
+})
+
 .controller('FeedCtrl', function($scope, $ionicLoading, $ionicTabsDelegate, $ionicActionSheet, Feed, Record) {
 
 	$scope.deleteButton = 'Edit';
@@ -184,7 +200,7 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('ProfileCtrl', function($scope, $ionicLoading, Profile, Feed) {
+.controller('ProfileCtrl', function($scope, $state, $ionicActionSheet, Profile, Feed) {
 
 	$scope.id = '542fee894e51797a026a87ae';
 	//$scope.user = Profile.getLocalUser();
@@ -209,14 +225,113 @@ angular.module('Training.controllers', [])
 
 	};
 
+	$scope.signOut = function (){
+		$ionicActionSheet.show({
+			titleText: 'Are you sure you want to sign out?',
+			destructiveText: 'Sign Out',
+			cancelText: 'Cancel',
+			cancel: function(){
+				return true;
+			},
+			destructiveButtonClicked: function(){
+				// Need to clear cache on signout
+				$state.go('login');
+				return true;
+			}
+		});
+	};
+
 	$scope.getSessions();
 
 	$scope.getUser();
 
 })
 
-.controller('ProfileSettingsCtrl', function($scope, Profile) {
+.controller('ProfileSettingsCtrl', function($scope, $location, $ionicLoading, $cordovaDialogs, $ionicActionSheet, $cordovaCamera, Profile) {
 
 	$scope.user = Profile.getLocalUser();
+
+	$scope.saveUser = function (){
+		$ionicLoading.show({
+	      templateUrl: 'templates/loading.html'
+	    });
+		Profile.saveUser($scope.user).then(function (){
+			$ionicLoading.hide();
+			$location.path('/tab/profile');
+		}, function (error){
+			$ionicLoading.hide();
+			$cordovaDialogs.alert('Please try again later', 'Connection Error');
+			console.log(error);
+		});
+	};
+
+	$scope.deleteUser = function (){
+		$ionicActionSheet.show({
+			titleText: 'Are you sure you want to delete your account?',
+			destructiveText: 'Delete Account',
+			cancelText: 'Cancel',
+			cancel: function(){
+				return true;
+			},
+			destructiveButtonClicked: function(){
+				Profile.deleteUser($scope.user).then(function (){
+					// This must be changed to Login page
+					$location.path('/tab/record');
+				}, function (error){
+					$cordovaDialogs.alert('We could not delete your account at this time', 'Connection Error');
+					console.log(error);
+				});
+				return true;
+			}
+		});
+	};
+
+	$scope.changePicture = function (){
+		$ionicActionSheet.show({
+			destructiveText: 'Delete',
+			buttons: [
+				{ text: 'Take Picture' },
+				{ text: 'Choose Existing' }
+			],
+			cancelText: 'Cancel',
+			cancel: function(){
+				return true;
+			},
+			destructiveButtonClicked: function(){
+				return true;
+			},
+			buttonClicked: function(index) {
+				if(index === 0){
+					var options = {
+						quality: 50,
+						destinationType: Camera.DestinationType.FILE_URI,
+						sourceType: Camera.PictureSourceType.CAMERA,
+						allowEdit: false,
+						cameraDirection: 1,
+						encodingType: Camera.EncodingType.JPEG,
+						saveToPhotoAlbum: false
+					};
+				}
+				else if(index === 1){
+					var options = {
+						quality: 50,
+						destinationType: Camera.DestinationType.FILE_URI,
+						sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+						allowEdit: false,
+						encodingType: Camera.EncodingType.JPEG,
+					};
+				}
+
+				$cordovaCamera.getPicture(options).then(function (imageData){
+					console.log(imageData);
+					$scope.user.mobileProfileImage = imageData;
+				}, function(err){
+					console.log(err);
+				});
+
+				return true;
+			}
+		});
+	};
 
 });

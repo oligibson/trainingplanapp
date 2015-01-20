@@ -1,0 +1,26 @@
+<ion-view  hide-nav-bar="true">
+	<ion-content class="padding profile-background">
+		<div class="col col-33 col-offset-33">
+			<img ng-src="img/logo.png" class="center-block login-logo">
+		</div>
+		<form>
+			<div class="list list-inset">
+			  <label class="item item-input">
+			    <i class="icon ion-ios7-email-outline placeholder-icon"></i>
+			    <input type="text" placeholder="Email">
+			  </label>
+			  <label class="item item-input">
+			    <i class="icon ion-ios7-locked-outline placeholder-icon"></i>
+			    <input type="password" placeholder="Password">
+			  </label>
+			</div>
+			<button class="button button-block button-outline button-light" ng-click="login()">
+				Login
+			</button>
+			<h2 class="login-title">or</h2>
+			<button class="button button-block button-outline button-light" ng-click="signUp()">
+				Sign Up
+			</button>
+		</form>
+	</ion-content>
+</ion-view>

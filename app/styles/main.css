@@ -138,6 +138,13 @@ fieldset[disabled] .form-control {
 	padding: 5px;
 }
 
+.profile-img-settings{
+	width: 140px;
+	height: 140px;
+	border: 2px solid #fff;
+	padding: 5px;
+}
+
 .profile-bar{
 	padding: 0px;
 }
@@ -281,4 +288,40 @@ input::-webkit-inner-spin-button {
 
 .img-circle {
 	border-radius: 50%;
+}
+
+.login-title {
+  overflow: hidden;
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: lighter;
+  text-transform: lowercase;
+  margin-bottom: 20px;
+  color: #ddd;
+}
+.login-title:before,
+.login-title:after {
+  background-color: #ddd;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+}
+.login-title:before {
+  right: 0.5em;
+  margin-left: -50%;
+}
+.login-title:after {
+  left: 0.5em;
+  margin-right: -50%;
+}
+
+.login-logo{
+	width: 100%;
+	max-width: 300px;
+	margin: 60% auto 30% auto;
 }

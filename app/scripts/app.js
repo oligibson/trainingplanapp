@@ -31,6 +31,18 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
   // Each state's controller can be found in controllers.js
   $stateProvider
 
+    .state('login', {
+      url: '/login',
+      templateUrl: 'templates/login.html',
+      controller: 'LoginCtrl'
+    })
+
+    .state('signup', {
+      url: '/login/signup',
+      templateUrl: 'templates/signup.html',
+      controller: 'SignupCtrl'
+    })
+
     // setup an abstract state for the tabs directive
     .state('tab', {
       url: '/tab',
@@ -116,7 +128,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
     });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/feed');
+  $urlRouterProvider.otherwise('/login');
 
 });
 

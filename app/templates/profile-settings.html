@@ -1,10 +1,23 @@
 <ion-view title="Settings">
 	<ion-nav-buttons side="right">
-		<button class="button button-clear button-light">
+		<button class="button button-clear button-light" ng-click="saveUser()">
         	Save
     	</button>
   	</ion-nav-buttons>
-	<ion-content class="has-header">
+	<ion-content class="has-header" has-bouncing="false">
+		<div class="profile-background">
+			<div class="row">
+			 	<div class="col">
+			 		<img ng-src="{{ user.mobileProfileImage }}" ng-click="changePicture()" class="img-circle center-block profile-img-settings">
+			 	</div>
+			</div>
+		</div>
+		<!--
+		<div class="row">
+		 	<div class="col">
+		 		<img ng-src="{{ user.mobileProfileImage }}" class="img-circle center-block profile-img-settings">
+		 	</div>
+		</div>-->
 		<div class="list">
 			<label class="item item-input">
 				<span class="input-label">First Name</span>
@@ -20,27 +33,33 @@
 			</label>
 			<label class="item item-input">
 				<span class="input-label">City</span>
-				<input type="text">
+				<input type="text" ng-model="user.city">
 			</label>
 			<label class="item item-input">
 				<span class="input-label">Country</span>
-				<input type="text">
+				<input type="text" ng-model="user.country">
 			</label>
 			<div class="item item-divider">
 			    Athlete Information
 			</div>
 			<label class="item item-input">
 				<span class="input-label">Birthday</span>
-				<input type="date">
+				<input type="date" ng-model="user.dob">
 			</label>
-			<label class="item item-input">
-				<span class="input-label">Gender</span>
-				<input type="text">
+			<label class="item item-input item-select">
+				<div class="input-label">
+					Gender
+				</div>
+				<select ng-model="user.gender">
+					<option>Male</option>
+					<option>Female</option>
+				</select>
 			</label>
 			<label class="item item-input">
 				<span class="input-label">Weight (kg)</span>
-				<input type="number">
+				<input type="number" ng-model="user.weight">
 			</label>
+			<!--
 			<div class="item item-divider">
 			    App Settings
 			</div>
@@ -48,11 +67,17 @@
 				<div class="input-label">
 					Weight Unit
 				</div>
-				<select>
+				<select ng-model="user.weightUnit">
 					<option selected>KG</option>
 					<option>Lbs</option>
 				</select>
 			</label>
+		-->
+		</div>
+		<div class="padding">
+			<button class="button button-block button-outline button-assertive" ng-click="deleteUser()">
+				Delete Account
+			</button>
 		</div>
 	</ion-content>
 </ion-view>

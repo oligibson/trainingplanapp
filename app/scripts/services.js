@@ -163,5 +163,44 @@ angular.module('Training.services', [])
       return currentUser;
     };
 
+    this.updateLocalUser = function(user){
+      localStorage.setItem('user', JSON.stringify(user));
+    };
+
+    this.saveUser = function(user){
+      var deferred = $q.defer();
+      var params = JSON.stringify(user);
+      $http({
+        method: 'PUT',
+        url: 'http://trainingplanserver.herokuapp.com/api/users/'+ user._id,
+        data: params,
+        headers: {'Content-Type': 'application/json'}
+      }).then(function (result){
+        localStorage.removeItem('user');
+        localStorage.setItem('user', JSON.stringify(result.data));
+        deferred.resolve(result.data);
+      }, function (error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    };
+
+    this.deleteUser = function(user){
+      var deferred = $q.defer();
+      $http({
+        method: 'DELETE',
+        url: 'http://trainingplanserver.herokuapp.com/api/users/'+ user._id,
+        headers: {'Content-Type': 'application/json'}
+      }).then(function (result){
+        localStorage.removeItem('user');
+        localStorage.removeItem('sessions');
+        localStorage.removeItem('currentSession');
+        deferred.resolve(result);
+      }, function (error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    };
+
   });
 

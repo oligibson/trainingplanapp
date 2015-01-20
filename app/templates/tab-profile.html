@@ -1,6 +1,6 @@
 <ion-view title="Profile">
 	<ion-nav-buttons side="left">
-		<button class="button button-clear button-light">
+		<button class="button button-clear button-light" ng-click="signOut()">
         	Sign Out
     	</button>
   	</ion-nav-buttons>
@@ -11,7 +11,7 @@
 		<div class="profile-background">
 			<div class="row">
 			 	<div class="col">
-			 		<img src="./img/oli.jpg" alt="..." class="img-circle center-block profile-img">
+			 		<img ng-src="{{ user.mobileProfileImage }}" class="img-circle center-block profile-img">
 			 	</div>
 			</div>
 			<div class="row profile-header">
@@ -22,7 +22,7 @@
 			</div>
 			<div class="row profile-bar">
 				<div class="col">
-			 		<h3 class="text-center">{{user.sessionsWeek || 3}}</h3>
+			 		<h3 class="text-center">{{user.sessionsThisWeek || 0}}</h3>
 			 		<h6 class="text-center">Sessions this Week</h6>
 			 	</div>
 			 	<div class="col">
@@ -30,7 +30,7 @@
 			 		<h6 class="text-center">Total Sessions</h6>
 			 	</div>
 			 	<div class="col">
-			 		<h3 class="text-center">{{user.lastSession || '12 Jun'}}</h3>
+			 		<h3 class="text-center">{{user.lastSession | date:'dd MMM' || 'None'}}</h3>
 			 		<h6 class="text-center">Last Session</h6>
 			 	</div>
 			</div>

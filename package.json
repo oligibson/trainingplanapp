@@ -52,6 +52,9 @@
     "org.apache.cordova.console",
     "https://github.com/apache/cordova-plugin-splashscreen.git",
     "org.apache.cordova.dialogs",
-    "http://github.com/VitaliiBlagodir/cordova-plugin-datepicker"
+    "http://github.com/VitaliiBlagodir/cordova-plugin-datepicker",
+    "org.apache.cordova.camera",
+    "https://github.com/driftyco/cordova-camera-roll.git",
+    "https://github.com/VitaliiBlagodir/cordova-plugin-datepicker.git"
   ]
 }
