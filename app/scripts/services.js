@@ -1,6 +1,62 @@
 'use strict';
 angular.module('Training.services', [])
 
+.service('Auth', function ($q, $http) {
+    
+    // This needs updating to handle saving token, and user details
+    this.signup = function(data){
+      console.log(data);
+      data.fname = data.name.substr(0,data.name.indexOf(' '));
+      data.lname = data.name.substr(data.name.indexOf(' ')+1);
+      console.log(data);
+
+      var deferred = $q.defer();
+      var params = JSON.stringify(data);
+      $http({
+        method: 'POST',
+        url: 'http://trainingplanserver.herokuapp.com/api/users',
+        data: params,
+        headers: {'Content-Type': 'application/json'}
+      }).then(function (result){
+        localStorage.setItem('token', JSON.stringify(result.data.token));
+        deferred.resolve(result.data);
+      }, function (error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    };
+
+    this.login = function(data){
+      console.log(data);
+
+      var deferred = $q.defer();
+      var params = JSON.stringify(data);
+      $http({
+        method: 'POST',
+        url: 'http://trainingplanserver.herokuapp.com/auth/login',
+        data: params,
+        headers: {'Content-Type': 'application/json'}
+      }).then(function (result){
+        localStorage.setItem('token', result.data.token);
+        localStorage.setItem('user_id', result.data.user._id);
+        localStorage.setItem('user', JSON.stringify(result.data.user));
+        deferred.resolve(result.data);
+      }, function (error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    };
+
+    this.signout = function (){
+      localStorage.removeItem('currentSession');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('user');
+      localStorage.removeItem('sessions');
+    };
+
+  })
+
   .service('Record', function ($q, $http) {
     
     this.create = function(data){
@@ -140,7 +196,7 @@ angular.module('Training.services', [])
 
   })
 
-  .service('Profile', function ($q, $http) {
+  .service('Profile', function ($q, $http, Auth) {
     
     this.getUser = function(user){
       var deferred = $q.defer();
@@ -160,6 +216,15 @@ angular.module('Training.services', [])
 
     this.getLocalUser = function() {
       var currentUser = JSON.parse(localStorage.getItem('user'));
+
+      if(currentUser.lastSession === undefined){
+        currentUser.lastSession = '-';
+      }
+
+      if(currentUser.mobileProfileImage === undefined){
+        currentUser.mobileProfileImage = './img/placeholder.png';
+      }
+
       return currentUser;
     };
 
@@ -192,9 +257,7 @@ angular.module('Training.services', [])
         url: 'http://trainingplanserver.herokuapp.com/api/users/'+ user._id,
         headers: {'Content-Type': 'application/json'}
       }).then(function (result){
-        localStorage.removeItem('user');
-        localStorage.removeItem('sessions');
-        localStorage.removeItem('currentSession');
+        Auth.signout();
         deferred.resolve(result);
       }, function (error){
         deferred.reject(error);

@@ -1,10 +1,19 @@
 'use strict';
 angular.module('Training.controllers', [])
 
-.controller('LoginCtrl', function($scope, $state) {
+.controller('LoginCtrl', function($scope, $state, Auth) {
+
+	$scope.user = {};
 
 	$scope.login = function (){
-		$state.go('tab.feed');
+		console.log($scope.user);
+		Auth.login($scope.user).then(function (result){
+			console.log(result);
+			$state.go('tab.feed');
+		}, function (err){
+			$scope.user.password = undefined;
+			console.log(err);
+		});
 	};
 
 	$scope.signUp = function (){
@@ -13,8 +22,17 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('SignupCtrl', function() {
+.controller('SignupCtrl', function($scope, Auth) {
 
+	$scope.user = { emailUpdates: true };
+
+	// This needs to login the user and handle errors
+	$scope.signUp = function (){
+		console.log($scope.user);
+		Auth.signup($scope.user).then(function (result){
+			console.log(result);
+		});
+	};
 })
 
 .controller('FeedCtrl', function($scope, $ionicLoading, $ionicTabsDelegate, $ionicActionSheet, Feed, Record) {
@@ -24,7 +42,7 @@ angular.module('Training.controllers', [])
 
 	$scope.Refresh = function (){
 		
-		Feed.getAll('542fee894e51797a026a87ae')
+		Feed.getAll(localStorage.getItem('user_id'))
 	    .then(function() {
 			$scope.sessions = Feed.getLocal();
 			$scope.$broadcast('scroll.refreshComplete');
@@ -65,7 +83,7 @@ angular.module('Training.controllers', [])
 		
 		$scope.sessions = Feed.getLocal();
 		
-		Feed.getAll('542fee894e51797a026a87ae').then(function (){
+		Feed.getAll(localStorage.getItem('user_id')).then(function (){
 			$scope.sessions = Feed.getLocal();
 		}, function (error){
 			console.log(error);
@@ -84,7 +102,7 @@ angular.module('Training.controllers', [])
 
 .controller('RecordCtrl', function($scope, $location, $ionicHistory, $ionicTabsDelegate, Record) {
 
-	$scope.session = { id: '542fee894e51797a026a87ae', activity: 'Gym', name: Record.sessionName()};
+	$scope.session = { id: localStorage.getItem('user_id'), activity: 'Gym', name: Record.sessionName()};
 	$scope.button = 'Record Session';
 
 	$scope.createSession = function (){
@@ -200,12 +218,14 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('ProfileCtrl', function($scope, $state, $ionicActionSheet, Profile, Feed) {
+.controller('ProfileCtrl', function($scope, $state, $ionicActionSheet, Profile, Feed, Auth) {
 
-	$scope.id = '542fee894e51797a026a87ae';
-	//$scope.user = Profile.getLocalUser();
+	$scope.id = localStorage.getItem('user_id');
 
 	$scope.getUser = function (){
+
+		$scope.user = Profile.getLocalUser();
+
 		Profile.getUser($scope.id).then(function (){
 			$scope.user = Profile.getLocalUser();
 		}, function (error){
@@ -217,7 +237,7 @@ angular.module('Training.controllers', [])
 		
 		$scope.sessions = Feed.getLocal();
 		
-		Feed.getAll('542fee894e51797a026a87ae').then(function (){
+		Feed.getAll($scope.id).then(function (){
 			$scope.sessions = Feed.getLocal();
 		}, function (error){
 			console.log(error);
@@ -234,7 +254,7 @@ angular.module('Training.controllers', [])
 				return true;
 			},
 			destructiveButtonClicked: function(){
-				// Need to clear cache on signout
+				Auth.signout();
 				$state.go('login');
 				return true;
 			}
@@ -247,7 +267,7 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('ProfileSettingsCtrl', function($scope, $location, $ionicLoading, $cordovaDialogs, $ionicActionSheet, $cordovaCamera, Profile) {
+.controller('ProfileSettingsCtrl', function($scope, $state, $location, $ionicLoading, $cordovaDialogs, $ionicActionSheet, $cordovaCamera, Profile) {
 
 	$scope.user = Profile.getLocalUser();
 
@@ -275,8 +295,7 @@ angular.module('Training.controllers', [])
 			},
 			destructiveButtonClicked: function(){
 				Profile.deleteUser($scope.user).then(function (){
-					// This must be changed to Login page
-					$location.path('/tab/record');
+					$state.go('login');
 				}, function (error){
 					$cordovaDialogs.alert('We could not delete your account at this time', 'Connection Error');
 					console.log(error);

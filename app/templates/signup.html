@@ -3,26 +3,26 @@
 		<div class="list">
 		  <label class="item item-input">
 		  	<i class="icon ion-ios7-person-outline placeholder-icon"></i>
-		    <input type="text" placeholder="Full Name">
+		    <input type="text" placeholder="Full Name" ng-model="user.name">
 		  </label>
 		  <label class="item item-input">
 		  	<i class="icon ion-ios7-email-outline placeholder-icon"></i>
-		    <input type="Email" placeholder="Email">
+		    <input type="Email" placeholder="Email" ng-model="user.email">
 		  </label>
 		  <label class="item item-input">
 		  	<i class="icon ion-ios7-locked-outline placeholder-icon"></i>
-		    <input type="password" placeholder="Password">
+		    <input type="password" placeholder="Password" ng-model="user.password">
 		  </label>
 		</div>
 		<div class="list">
 		  <li class="item item-checkbox">
 		     Send me email updates
 		     <label class="checkbox">
-		       <input type="checkbox">
+		       <input type="checkbox" ng-model="user.emailUpdates">
 		     </label>
 		  </li>
 		</div>
-		<button class="button button-block button-full button-positive" ng-click="">
+		<button class="button button-block button-full button-positive" ng-click="signUp()">
 			Sign Up
 		</button>
 	</ion-content>

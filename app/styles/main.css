@@ -133,6 +133,7 @@ fieldset[disabled] .form-control {
 
 .profile-img{
 	width: 140px;
+	height: 140px;
 	margin-top: 15px;
 	border: 2px solid #fff;
 	padding: 5px;

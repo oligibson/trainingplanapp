@@ -17,20 +17,19 @@
 			<div class="row profile-header">
 				<div class="col">
 			 		<h3 class="text-center">{{user.fname}} {{user.lname}}</h3>
-			 		<h6 class="text-center">Dec 2014</h6>
 			 	</div>
 			</div>
 			<div class="row profile-bar">
 				<div class="col">
 			 		<h3 class="text-center">{{user.sessionsThisWeek || 0}}</h3>
-			 		<h6 class="text-center">Sessions this Week</h6>
+			 		<h6 class="text-center">This Week</h6>
 			 	</div>
 			 	<div class="col">
 			 		<h3 class="text-center">{{user.sessionsTotal || 0}}</h3>
 			 		<h6 class="text-center">Total Sessions</h6>
 			 	</div>
 			 	<div class="col">
-			 		<h3 class="text-center">{{user.lastSession | date:'dd MMM' || 'None'}}</h3>
+			 		<h3 class="text-center">{{user.lastSession | date:'dd MMM' }}</h3>
 			 		<h6 class="text-center">Last Session</h6>
 			 	</div>
 			</div>

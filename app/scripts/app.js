@@ -33,6 +33,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
 
     .state('login', {
       url: '/login',
+      cache: false,
       templateUrl: 'templates/login.html',
       controller: 'LoginCtrl'
     })
