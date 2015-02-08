@@ -6,7 +6,6 @@ angular.module('Training.controllers', [])
 	$scope.user = {};
 
 	$scope.login = function (){
-		console.log($scope.user);
 		Auth.login($scope.user).then(function (result){
 			console.log(result);
 			$state.go('tab.feed');
@@ -22,15 +21,15 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('SignupCtrl', function($scope, Auth) {
+.controller('SignupCtrl', function($scope, $state, $cordovaDialogs, Auth) {
 
 	$scope.user = { emailUpdates: true };
 
-	// This needs to login the user and handle errors
-	$scope.signUp = function (){
-		console.log($scope.user);
-		Auth.signup($scope.user).then(function (result){
-			console.log(result);
+	$scope.signUpForm = function (){
+		Auth.signup($scope.user).then(function (){
+			$state.go('tab.record');
+		}, function (err){
+			$cordovaDialogs.confirm(err.data.errors.email.message, 'User Exists', 'Try Again');
 		});
 	};
 })

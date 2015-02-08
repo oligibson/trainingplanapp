@@ -55,6 +55,7 @@
     "http://github.com/VitaliiBlagodir/cordova-plugin-datepicker",
     "org.apache.cordova.camera",
     "https://github.com/driftyco/cordova-camera-roll.git",
-    "https://github.com/VitaliiBlagodir/cordova-plugin-datepicker.git"
+    "https://github.com/VitaliiBlagodir/cordova-plugin-datepicker.git",
+    "org.apache.cordova.network-information"
   ]
 }

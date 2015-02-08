@@ -5,11 +5,9 @@ angular.module('Training.services', [])
     
     // This needs updating to handle saving token, and user details
     this.signup = function(data){
-      console.log(data);
       data.fname = data.name.substr(0,data.name.indexOf(' '));
       data.lname = data.name.substr(data.name.indexOf(' ')+1);
-      console.log(data);
-
+      
       var deferred = $q.defer();
       var params = JSON.stringify(data);
       $http({
@@ -18,7 +16,9 @@ angular.module('Training.services', [])
         data: params,
         headers: {'Content-Type': 'application/json'}
       }).then(function (result){
-        localStorage.setItem('token', JSON.stringify(result.data.token));
+        localStorage.setItem('token', result.data.token);
+        localStorage.setItem('user_id', result.data.user._id);
+        localStorage.setItem('user', JSON.stringify(result.data.user));
         deferred.resolve(result.data);
       }, function (error){
         deferred.reject(error);
@@ -53,6 +53,34 @@ angular.module('Training.services', [])
       localStorage.removeItem('user_id');
       localStorage.removeItem('user');
       localStorage.removeItem('sessions');
+    };
+
+    this.refresh = function (){
+
+      var user = localStorage.getItem('user_id');
+      var token = localStorage.getItem('token');
+      var deferred = $q.defer();
+
+      if(user === undefined || token === undefined){
+        deferred.reject('User not previously logged in');
+      }
+
+      $http({
+        method: 'GET',
+        url: 'http://trainingplanserver.herokuapp.com/api/users/' + user + '/refresh',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
+      }).then(function (result){
+        localStorage.setItem('token', result.data.token);
+        deferred.resolve(result.data);
+      }, function (error){
+        console.log(error);
+        deferred.reject(error);
+      });
+
+      return deferred.promise;
     };
 
   })
