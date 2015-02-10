@@ -1,17 +1,21 @@
 'use strict';
 angular.module('Training.controllers', [])
 
-.controller('LoginCtrl', function($scope, $state, Auth) {
+.controller('LoginCtrl', function($scope, $state, $cordovaDialogs, Auth) {
 
 	$scope.user = {};
+	$scope.loginButton = 'Login';
 
 	$scope.login = function (){
+		$scope.loginButton = 'Please Wait...';
 		Auth.login($scope.user).then(function (result){
-			console.log(result);
+			$scope.loginButton = 'Login';
 			$state.go('tab.feed');
 		}, function (err){
+			$scope.loginButton = 'Login';
 			$scope.user.password = undefined;
 			console.log(err);
+			$cordovaDialogs.confirm('Incorrect username or password, please try again', 'Login Error', 'Try Again');
 		});
 	};
 
