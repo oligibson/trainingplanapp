@@ -8,7 +8,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controllers', 'Training.services'])
 
-.run(function($ionicPlatform, Auth, $state, $cordovaSplashscreen) {
+.run(function($ionicPlatform, Auth, $state, $cordovaSplashscreen, $cordovaNetwork) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -21,13 +21,24 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
       StatusBar.show();
     }
 
-    Auth.refresh().then(function(){
-      $cordovaSplashscreen.hide();
-      $state.go('tab.feed');
-    }, function (err){
-      $cordovaSplashscreen.hide();
-      console.log('token expired', err);
-    });
+    if($cordovaNetwork.online()){
+      Auth.refresh().then(function(){
+        $cordovaSplashscreen.hide();
+        $state.go('tab.feed');
+      }, function (err){
+        $cordovaSplashscreen.hide();
+        console.log('token expired', err);
+      });
+    }else{
+      var user = localStorage.getItem('user_id');
+      var token = localStorage.getItem('token');
+      if(user != undefinded && token != undefinded){
+        $cordovaSplashscreen.hide();
+        $state.go('tab.feed');
+      }else{
+        $cordovaSplashscreen.hide();
+      }
+    }
 
   });
 })
