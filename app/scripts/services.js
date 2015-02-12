@@ -27,7 +27,7 @@ angular.module('Training.services', [])
     };
 
     this.login = function(data){
-      
+
       var deferred = $q.defer();
       var params = JSON.stringify(data);
       $http({
@@ -87,13 +87,17 @@ angular.module('Training.services', [])
   .service('Record', function ($q, $http) {
     
     this.create = function(data){
+      var token = localStorage.getItem('token');
       var deferred = $q.defer();
       var params = JSON.stringify(data);
       $http({
         method: 'POST',
         url: 'http://trainingplanserver.herokuapp.com/api/sessions',
         data: params,
-        headers: {'Content-Type': 'application/json'}
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
       }).then(function (result){
         localStorage.setItem('currentSession', JSON.stringify(result.data));
         console.log(result.data);
@@ -112,7 +116,9 @@ angular.module('Training.services', [])
         method: 'PUT',
         url: 'http://trainingplanserver.herokuapp.com/api/sessions/' + data._id,
         data: params,
-        headers: {'Content-Type': 'application/json'}
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }).then(function (result){
         console.log(result.data);
         deferred.resolve(result.data);
@@ -123,11 +129,15 @@ angular.module('Training.services', [])
     };
 
     this.deleteCurrentServerSession = function(sessionId){
+      var token = localStorage.getItem('token');
       var deferred = $q.defer();
       $http({
         method: 'DELETE',
         url: 'http://trainingplanserver.herokuapp.com/api/sessions/' + sessionId,
-        headers: {'Content-Type': 'application/json'}
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
       }).then(function(result){
         console.log(result);
         deferred.resolve(result.data);
@@ -176,11 +186,15 @@ angular.module('Training.services', [])
   .service('Feed', function ($q, $http) {
     
     this.getAll = function(user){
+      var token = localStorage.getItem('token');
       var deferred = $q.defer();
       $http({
         method: 'GET',
         url: 'https://trainingplanserver.herokuapp.com/api/sessions/user/' + user,
-        headers: {'Content-Type': 'application/json'}
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
       }).then(function (result){
         console.log(result);
         localStorage.removeItem('sessions');
@@ -226,16 +240,21 @@ angular.module('Training.services', [])
   .service('Profile', function ($q, $http, Auth) {
     
     this.getUser = function(user){
+      var token = localStorage.getItem('token');
       var deferred = $q.defer();
       $http({
         method: 'GET',
         url: 'http://trainingplanserver.herokuapp.com/api/users/'+user,
-        headers: {'Content-Type': 'application/json'}
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
       }).then(function (result){
         localStorage.removeItem('user');
         localStorage.setItem('user', JSON.stringify(result.data));
         deferred.resolve(result.data);
       }, function (error){
+        console.log(error);
         deferred.reject(error);
       });
       return deferred.promise;
@@ -260,29 +279,38 @@ angular.module('Training.services', [])
     };
 
     this.saveUser = function(user){
+      var token = localStorage.getItem('token');
       var deferred = $q.defer();
       var params = JSON.stringify(user);
       $http({
         method: 'PUT',
         url: 'http://trainingplanserver.herokuapp.com/api/users/'+ user._id,
         data: params,
-        headers: {'Content-Type': 'application/json'}
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
       }).then(function (result){
         localStorage.removeItem('user');
         localStorage.setItem('user', JSON.stringify(result.data));
         deferred.resolve(result.data);
       }, function (error){
+        console.log(error);
         deferred.reject(error);
       });
       return deferred.promise;
     };
 
     this.deleteUser = function(user){
+      var token = localStorage.getItem('token');
       var deferred = $q.defer();
       $http({
         method: 'DELETE',
         url: 'http://trainingplanserver.herokuapp.com/api/users/'+ user._id,
-        headers: {'Content-Type': 'application/json'}
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
       }).then(function (result){
         Auth.signout();
         deferred.resolve(result);
