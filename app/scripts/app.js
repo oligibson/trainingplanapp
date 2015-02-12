@@ -32,7 +32,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
     }else{
       var user = localStorage.getItem('user_id');
       var token = localStorage.getItem('token');
-      if(user != undefinded && token != undefinded){
+      if(user !== null || token !== null){
         $cordovaSplashscreen.hide();
         $state.go('tab.feed');
       }else{

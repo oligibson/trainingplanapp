@@ -1,7 +1,7 @@
 'use strict';
 angular.module('Training.services', [])
 
-.service('Auth', function ($q, $http) {
+.service('Auth', function ($q, $http, $cordovaDialogs, $state) {
     
     // This needs updating to handle saving token, and user details
     this.signup = function(data){
@@ -54,6 +54,16 @@ angular.module('Training.services', [])
       localStorage.removeItem('sessions');
     };
 
+    this.unauthorised = function (){
+      $cordovaDialogs.alert('Please login and try again', 'Authentication Error');
+      localStorage.removeItem('currentSession');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('user');
+      localStorage.removeItem('sessions');
+      $state.go('login');
+    };
+
     this.refresh = function (){
 
       var user = localStorage.getItem('user_id');
@@ -84,7 +94,7 @@ angular.module('Training.services', [])
 
   })
 
-  .service('Record', function ($q, $http) {
+  .service('Record', function ($q, $http, Auth) {
     
     this.create = function(data){
       var token = localStorage.getItem('token');
@@ -103,6 +113,9 @@ angular.module('Training.services', [])
         console.log(result.data);
         deferred.resolve(result.data);
       }, function (error){
+        if(error.status === 401){
+          Auth.unauthorised();
+        }
         deferred.reject(error);
       });
       return deferred.promise;
@@ -142,6 +155,9 @@ angular.module('Training.services', [])
         console.log(result);
         deferred.resolve(result.data);
       }, function (error){
+        if(error.status === 401){
+          Auth.unauthorised();
+        }
         deferred.reject(error);
       });
       return deferred.promise;
@@ -183,7 +199,7 @@ angular.module('Training.services', [])
 
   })
 
-  .service('Feed', function ($q, $http) {
+  .service('Feed', function ($q, $http, Auth) {
     
     this.getAll = function(user){
       var token = localStorage.getItem('token');
@@ -201,6 +217,9 @@ angular.module('Training.services', [])
         localStorage.setItem('sessions', JSON.stringify(result.data));
         deferred.resolve(result.data);
       }, function (error){
+        if(error.status === 401){
+          Auth.unauthorised();
+        }
         deferred.reject(error);
       });
       return deferred.promise;
@@ -254,7 +273,9 @@ angular.module('Training.services', [])
         localStorage.setItem('user', JSON.stringify(result.data));
         deferred.resolve(result.data);
       }, function (error){
-        console.log(error);
+        if(error.status === 401){
+          Auth.unauthorised();
+        }
         deferred.reject(error);
       });
       return deferred.promise;
@@ -296,6 +317,9 @@ angular.module('Training.services', [])
         deferred.resolve(result.data);
       }, function (error){
         console.log(error);
+        if(error.status === 401){
+          Auth.unauthorised();
+        }
         deferred.reject(error);
       });
       return deferred.promise;
@@ -315,6 +339,9 @@ angular.module('Training.services', [])
         Auth.signout();
         deferred.resolve(result);
       }, function (error){
+        if(error.status === 401){
+          Auth.unauthorised();
+        }
         deferred.reject(error);
       });
       return deferred.promise;
