@@ -37,33 +37,26 @@ angular.module('Training.services', [])
     this.signup = function(data){
       data.fname = data.name.substr(0,data.name.indexOf(' '));
       data.lname = data.name.substr(data.name.indexOf(' ')+1);
-      
-      var deferred = $q.defer();
+      var url = '/users';
       var params = JSON.stringify(data);
-      $http({
-        method: 'POST',
-        url: 'http://trainingplanserver.herokuapp.com/api/users',
-        data: params,
-        headers: {'Content-Type': 'application/json'},
-        timeout: 5000
-      }).then(function (result){
-        localStorage.setItem('token', result.data.token);
-        localStorage.setItem('user_id', result.data.user._id);
-        localStorage.setItem('user', JSON.stringify(result.data.user));
-        deferred.resolve(result.data);
+
+      var deferred = $q.defer();
+      Rest.send('POST', url, 5000, params, null)
+      .then(function (result){
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('user_id', result.user._id);
+        localStorage.setItem('user', JSON.stringify(result.user));
+        deferred.resolve(result);
       }, function (error){
-        if(error.status === 0){
-          console.log('Timed Out');
-        }
         deferred.reject(error);
       });
       return deferred.promise;
     };
 
     this.login = function(data){
+      var params = JSON.stringify(data);
 
       var deferred = $q.defer();
-      var params = JSON.stringify(data);
       $http({
         method: 'POST',
         url: 'http://trainingplanserver.herokuapp.com/auth/login',
@@ -106,28 +99,18 @@ angular.module('Training.services', [])
 
       var user = localStorage.getItem('user_id');
       var token = localStorage.getItem('token');
+      var url = '/users/' + user + '/refresh';
       var deferred = $q.defer();
 
       if(user === undefined || token === undefined){
         deferred.reject('User not previously logged in');
       }
 
-      $http({
-        method: 'GET',
-        url: 'http://trainingplanserver.herokuapp.com/api/users/' + user + '/refresh',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': token
-        },
-        timeout: 5000
-      }).then(function (result){
-        localStorage.setItem('token', result.data.token);
-        deferred.resolve(result.data);
+      Rest.send('GET', url, 5000, null, token)
+      .then(function (result){
+        localStorage.setItem('token', result.token);
+        deferred.resolve(result);
       }, function (error){
-        if(error.status === 0){
-          console.log('Timed Out');
-        }
-        console.log(error);
         deferred.reject(error);
       });
 
@@ -136,32 +119,19 @@ angular.module('Training.services', [])
 
   })
 
-  .service('Record', function ($q, $http, Auth) {
+  .service('Record', function ($q, Rest) {
     
     this.create = function(data){
       var token = localStorage.getItem('token');
-      var deferred = $q.defer();
+      var url = '/sessions';
       var params = JSON.stringify(data);
-      $http({
-        method: 'POST',
-        url: 'http://trainingplanserver.herokuapp.com/api/sessions',
-        data: params,
-        headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': token
-        },
-        timeout: 5000
-      }).then(function (result){
-        localStorage.setItem('currentSession', JSON.stringify(result.data));
-        console.log(result.data);
-        deferred.resolve(result.data);
+
+      var deferred = $q.defer();
+      Rest.send('POST', url, 5000, params, token)
+      .then(function (result){
+        localStorage.setItem('currentSession', JSON.stringify(result));
+        deferred.resolve(result);
       }, function (error){
-        if(error.status === 0){
-          console.log('Timed Out');
-        }
-        if(error.status === 401){
-          Auth.unauthorised();
-        }
         deferred.reject(error);
       });
       return deferred.promise;
@@ -169,23 +139,14 @@ angular.module('Training.services', [])
 
     this.completeSession = function(data){
       var params = JSON.stringify(data);
+      var url = '/sessions/' + data._id;
 
       var deferred = $q.defer();
-      $http({
-        method: 'PUT',
-        url: 'http://trainingplanserver.herokuapp.com/api/sessions/' + data._id,
-        data: params,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        timeout: 5000
-      }).then(function (result){
-        console.log(result.data);
-        deferred.resolve(result.data);
+      Rest.send('PUT', url, 5000, params, null)
+      .then(function (result){
+        console.log(result);
+        deferred.resolve(result);
       }, function (error){
-        if(error.status === 0){
-          console.log('Timed Out');
-        }
         deferred.reject(error);
       });
       return deferred.promise;
@@ -242,7 +203,7 @@ angular.module('Training.services', [])
 
   })
 
-  .service('Feed', function ($q, Auth, Rest) {
+  .service('Feed', function ($q, Rest) {
     
     this.getAll = function(user){
       var token = localStorage.getItem('token');
