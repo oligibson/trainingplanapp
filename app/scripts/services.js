@@ -14,13 +14,17 @@ angular.module('Training.services', [])
         method: 'POST',
         url: 'http://trainingplanserver.herokuapp.com/api/users',
         data: params,
-        headers: {'Content-Type': 'application/json'}
+        headers: {'Content-Type': 'application/json'},
+        timeout: 5000
       }).then(function (result){
         localStorage.setItem('token', result.data.token);
         localStorage.setItem('user_id', result.data.user._id);
         localStorage.setItem('user', JSON.stringify(result.data.user));
         deferred.resolve(result.data);
       }, function (error){
+        if(error.status === 0){
+          console.log('Timed Out');
+        }
         deferred.reject(error);
       });
       return deferred.promise;
@@ -34,13 +38,17 @@ angular.module('Training.services', [])
         method: 'POST',
         url: 'http://trainingplanserver.herokuapp.com/auth/login',
         data: params,
-        headers: {'Content-Type': 'application/json'}
+        headers: {'Content-Type': 'application/json'},
+        timeout: 5000
       }).then(function (result){
         localStorage.setItem('token', result.data.token);
         localStorage.setItem('user_id', result.data.user._id);
         localStorage.setItem('user', JSON.stringify(result.data.user));
         deferred.resolve(result.data);
       }, function (error){
+        if(error.status === 0){
+          console.log('Timed Out');
+        }
         deferred.reject(error);
       });
       return deferred.promise;
@@ -80,11 +88,15 @@ angular.module('Training.services', [])
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-        }
+        },
+        timeout: 5000
       }).then(function (result){
         localStorage.setItem('token', result.data.token);
         deferred.resolve(result.data);
       }, function (error){
+        if(error.status === 0){
+          console.log('Timed Out');
+        }
         console.log(error);
         deferred.reject(error);
       });
@@ -107,12 +119,16 @@ angular.module('Training.services', [])
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-        }
+        },
+        timeout: 5000
       }).then(function (result){
         localStorage.setItem('currentSession', JSON.stringify(result.data));
         console.log(result.data);
         deferred.resolve(result.data);
       }, function (error){
+        if(error.status === 0){
+          console.log('Timed Out');
+        }
         if(error.status === 401){
           Auth.unauthorised();
         }
@@ -131,11 +147,15 @@ angular.module('Training.services', [])
         data: params,
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        timeout: 5000
       }).then(function (result){
         console.log(result.data);
         deferred.resolve(result.data);
       }, function (error){
+        if(error.status === 0){
+          console.log('Timed Out');
+        }
         deferred.reject(error);
       });
       return deferred.promise;
@@ -150,11 +170,15 @@ angular.module('Training.services', [])
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-        }
+        },
+        timeout: 5000
       }).then(function(result){
         console.log(result);
         deferred.resolve(result.data);
       }, function (error){
+        if(error.status === 0){
+          console.log('Timed Out');
+        }
         if(error.status === 401){
           Auth.unauthorised();
         }
@@ -210,13 +234,17 @@ angular.module('Training.services', [])
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-        }
+        },
+        timeout: 5000
       }).then(function (result){
         console.log(result);
         localStorage.removeItem('sessions');
         localStorage.setItem('sessions', JSON.stringify(result.data));
         deferred.resolve(result.data);
       }, function (error){
+        if(error.status === 0){
+          console.log('Timed Out');
+        }
         if(error.status === 401){
           Auth.unauthorised();
         }
@@ -267,17 +295,22 @@ angular.module('Training.services', [])
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-        }
+        },
+        timeout: 5000
       }).then(function (result){
         localStorage.removeItem('user');
         localStorage.setItem('user', JSON.stringify(result.data));
         deferred.resolve(result.data);
       }, function (error){
+        if(error.status === 0){
+          console.log('Timed Out');
+        }
         if(error.status === 401){
           Auth.unauthorised();
         }
         deferred.reject(error);
       });
+
       return deferred.promise;
     };
 
@@ -310,13 +343,17 @@ angular.module('Training.services', [])
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-        }
+        },
+        timeout: 5000
       }).then(function (result){
         localStorage.removeItem('user');
         localStorage.setItem('user', JSON.stringify(result.data));
         deferred.resolve(result.data);
       }, function (error){
         console.log(error);
+        if(error.status === 0){
+          console.log('Timed Out');
+        }
         if(error.status === 401){
           Auth.unauthorised();
         }
@@ -334,11 +371,15 @@ angular.module('Training.services', [])
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-        }
+        },
+        timeout: 5000
       }).then(function (result){
         Auth.signout();
         deferred.resolve(result);
       }, function (error){
+        if(error.status === 0){
+          console.log('Timed Out');
+        }
         if(error.status === 401){
           Auth.unauthorised();
         }
