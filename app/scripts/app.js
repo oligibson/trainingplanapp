@@ -147,6 +147,17 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
           controller: 'ProfileSettingsCtrl'
         }
       }
+    })
+
+    .state('tab.profile-password', {
+      cache: false,
+      url: '/profile/settings/password',
+      views: {
+        'tab-profile': {
+          templateUrl: 'templates/profile-password.html',
+          controller: 'ProfilePasswordCtrl'
+        }
+      }
     });
 
   // if none of the above states are matched, use this as the fallback

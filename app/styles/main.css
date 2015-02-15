@@ -326,3 +326,7 @@ input::-webkit-inner-spin-button {
 	max-width: 300px;
 	margin: 60% auto 30% auto;
 }
+
+.button-padding{
+	padding: 0 10px 0 10px;
+}

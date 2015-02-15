@@ -8,7 +8,7 @@ angular.module('Training.controllers', [])
 
 	$scope.login = function (){
 		$scope.loginButton = 'Please Wait...';
-		Auth.login($scope.user).then(function (result){
+		Auth.login($scope.user).then(function (){
 			$scope.loginButton = 'Login';
 			$state.go('tab.feed');
 		}, function (err){
@@ -258,7 +258,6 @@ angular.module('Training.controllers', [])
 			},
 			destructiveButtonClicked: function(){
 				Auth.signout();
-				$state.go('login');
 				return true;
 			}
 		});
@@ -270,9 +269,13 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('ProfileSettingsCtrl', function($scope, $state, $location, $ionicLoading, $cordovaDialogs, $ionicActionSheet, $cordovaCamera, Profile) {
+.controller('ProfileSettingsCtrl', function($scope, $state, $location, $ionicLoading, $cordovaDialogs, $ionicActionSheet, $cordovaCamera, Profile, Auth) {
 
 	$scope.user = Profile.getLocalUser();
+
+	$scope.changePassword = function (){
+		$state.go('tab.profile-password');
+	};
 
 	$scope.saveUser = function (){
 		$ionicLoading.show({
@@ -298,7 +301,7 @@ angular.module('Training.controllers', [])
 			},
 			destructiveButtonClicked: function(){
 				Profile.deleteUser($scope.user).then(function (){
-					$state.go('login');
+					Auth.signout();
 				}, function (error){
 					$cordovaDialogs.alert('We could not delete your account at this time', 'Connection Error');
 					console.log(error);
@@ -354,6 +357,16 @@ angular.module('Training.controllers', [])
 				return true;
 			}
 		});
+	};
+
+})
+
+.controller('ProfilePasswordCtrl', function($scope) {
+
+	$scope.pass = {};
+
+	$scope.updatePassword = function (){
+		console.log($scope.pass);
 	};
 
 });

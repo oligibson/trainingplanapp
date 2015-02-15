@@ -59,22 +59,13 @@
 				<span class="input-label">Weight (kg)</span>
 				<input type="number" ng-model="user.weight">
 			</label>
-			<!--
-			<div class="item item-divider">
-			    App Settings
-			</div>
-			<label class="item item-input item-select">
-				<div class="input-label">
-					Weight Unit
-				</div>
-				<select ng-model="user.weightUnit">
-					<option selected>KG</option>
-					<option>Lbs</option>
-				</select>
-			</label>
-		-->
 		</div>
-		<div class="padding">
+		<div class="button-padding">
+			<button class="button button-block button-outline button-positive" ng-click="changePassword()">
+				Change Password
+			</button>
+		</div>
+		<div class="button-padding">
 			<button class="button button-block button-outline button-assertive" ng-click="deleteUser()">
 				Delete Account
 			</button>

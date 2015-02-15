@@ -21,17 +21,23 @@ angular.module('Training.services', [])
         console.log(error);
         if(error.status === 0){
           console.log('Timed Out');
+          // Add function here to handle timeout
+          return deferred.reject({ status: 0, message: 'Request Timed Out'});
         }
-        if(error.status === 401){
+        else if(error.status === 401){
           console.log('unauthorised');
+          //Auth.unauthorised();
+          return deferred.reject({ status: 401, message: 'Your Token has Expired'});
         }
-        deferred.reject(error);
+        else{
+          return deferred.reject(error);
+        }
       });
       return deferred.promise;
     };
   })
 
-.service('Auth', function ($q, $http, $cordovaDialogs, $state) {
+.service('Auth', function ($q, $http, $cordovaDialogs, $state, Rest) {
     
     // This needs updating to handle saving token, and user details
     this.signup = function(data){
@@ -83,6 +89,7 @@ angular.module('Training.services', [])
       localStorage.removeItem('user_id');
       localStorage.removeItem('user');
       localStorage.removeItem('sessions');
+      $state.go('login');
     };
 
     this.unauthorised = function (){
@@ -132,6 +139,7 @@ angular.module('Training.services', [])
         localStorage.setItem('currentSession', JSON.stringify(result));
         deferred.resolve(result);
       }, function (error){
+        console.log(error);
         deferred.reject(error);
       });
       return deferred.promise;
@@ -312,7 +320,6 @@ angular.module('Training.services', [])
       var deferred = $q.defer();
       Rest.send('DELETE', url, 5000, null, token)
       .then(function (result){
-        Auth.signout();
         deferred.resolve(result);
       }, function (error){
         deferred.reject(error);
