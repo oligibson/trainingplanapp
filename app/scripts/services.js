@@ -327,5 +327,30 @@ angular.module('Training.services', [])
       return deferred.promise;
     };
 
+  })
+
+.service('Upload', function ($cordovaFileTransfer) {
+    
+    this.profilePic = function (user, image){
+
+      console.log('Hit Upload');
+
+      var url = 'http://trainingplanserver.herokuapp.com/api/uploads/profile/' + user._id;
+      var filePath = image;
+      var options = {
+        fileKey: 'photo',
+        chunkedMode: false
+      };
+
+      $cordovaFileTransfer.upload(url, filePath, options)
+      .then(function(result){
+        console.log(result);
+      }, function(err) {
+        console.log(err);
+      }, function (progress) {
+        console.log(progress);
+      });
+    };
+
   });
 

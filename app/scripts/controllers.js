@@ -269,7 +269,7 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('ProfileSettingsCtrl', function($scope, $state, $location, $ionicLoading, $cordovaDialogs, $ionicActionSheet, $cordovaCamera, Profile, Auth) {
+.controller('ProfileSettingsCtrl', function($scope, $state, $location, $ionicLoading, $cordovaDialogs, $ionicActionSheet, $cordovaCamera, Profile, Auth, Upload) {
 
 	$scope.user = Profile.getLocalUser();
 
@@ -349,6 +349,8 @@ angular.module('Training.controllers', [])
 
 				$cordovaCamera.getPicture(options).then(function (imageData){
 					console.log(imageData);
+					// Add Upload here...
+					Upload.profilePic($scope.user, imageData);
 					$scope.user.mobileProfileImage = imageData;
 				}, function(err){
 					console.log(err);
