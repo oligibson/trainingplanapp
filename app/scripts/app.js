@@ -21,7 +21,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
       StatusBar.show();
     }
 
-    if($cordovaNetwork.online()){
+    if($cordovaNetwork.isOnline()){
       Auth.refresh().then(function(){
         $cordovaSplashscreen.hide();
         $state.go('tab.feed');
