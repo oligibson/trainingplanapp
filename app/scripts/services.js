@@ -124,6 +124,21 @@ angular.module('Training.services', [])
       return deferred.promise;
     };
 
+    this.changePassword = function (data){
+      var params = JSON.stringify(data);
+      var token = localStorage.getItem('token');
+      var url = '/users/' + localStorage.getItem('user_id') + '/password';
+
+      var deferred = $q.defer();
+      Rest.send('PUT', url, 5000, params, token)
+      .then(function (result){
+        deferred.resolve(result);
+      }, function (error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    };
+
   })
 
   .service('Record', function ($q, Rest) {

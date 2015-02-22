@@ -349,7 +349,6 @@ angular.module('Training.controllers', [])
 
 				$cordovaCamera.getPicture(options).then(function (imageData){
 					console.log(imageData);
-					// Add Upload here...
 					Upload.profilePic($scope.user, imageData);
 					$scope.user.mobileProfileImage = imageData;
 				}, function(err){
@@ -363,12 +362,48 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('ProfilePasswordCtrl', function($scope) {
+.controller('ProfilePasswordCtrl', function($scope, $state, $ionicActionSheet, $cordovaDialogs, Auth) {
 
 	$scope.pass = {};
+	$scope.button = 'Save Password';
 
 	$scope.updatePassword = function (){
-		console.log($scope.pass);
+		$scope.button = 'Please Wait...';
+		$ionicActionSheet.show({
+			titleText: 'Are you sure you want to change your password?',
+			buttons: [
+				{ text: 'Change Password' }
+			],
+			cancelText: 'Cancel',
+			cancel: function(){
+				$scope.pass = {};
+				$scope.button = 'Save Password';
+				return true;
+			},
+			buttonClicked: function(){
+				if($scope.pass.oldPassword.length < 1 || $scope.pass.newPassword.length < 1 ){
+					console.log('Error');
+					$scope.button = 'Save Password';
+					$scope.pass = {};
+					$cordovaDialogs.alert('Please fill in both password fields', 'Error');
+					return true;
+				}else{
+					Auth.changePassword($scope.pass).then(function(){
+						$scope.pass = {};
+						$scope.button = 'Save Password';
+						$cordovaDialogs.alert('Your password was successfully updated!', 'Password Updated')
+						.then(function() {
+					      $state.go('tab.profile');
+					    });
+					}, function (){
+						$scope.pass = {};
+						$scope.button = 'Save Password';
+						$cordovaDialogs.alert('Your password could not be updated, please try again.', 'Error');
+					});
+					return true;
+				}
+			}
+		});
 	};
 
 });
