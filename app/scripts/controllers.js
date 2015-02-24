@@ -349,8 +349,16 @@ angular.module('Training.controllers', [])
 
 				$cordovaCamera.getPicture(options).then(function (imageData){
 					console.log(imageData);
-					Upload.profilePic($scope.user, imageData);
-					$scope.user.mobileProfileImage = imageData;
+					StatusBar.styleLightContent();
+					Upload.profilePic($scope.user, imageData).then(function (result){
+						console.log(result.response.mobileProfileImage);
+						$scope.user.mobileProfileImage = result.response.mobileProfileImage;
+					}, function (err){
+						console.log(err);
+						$cordovaDialogs.alert('We could not upload your photo at this time, please try again.', 'Connection Error');
+					}, function (p){
+						console.log(p);
+					});
 				}, function(err){
 					console.log(err);
 				});

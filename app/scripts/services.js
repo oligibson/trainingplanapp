@@ -344,12 +344,10 @@ angular.module('Training.services', [])
 
   })
 
-.service('Upload', function ($cordovaFileTransfer) {
+.service('Upload', function ($q, $cordovaFileTransfer) {
     
     this.profilePic = function (user, image){
-
-      console.log('Hit Upload');
-
+      console.log('uploading');
       var url = 'http://trainingplanserver.herokuapp.com/api/uploads/profile/' + user._id;
       var filePath = image;
       var options = {
@@ -357,14 +355,17 @@ angular.module('Training.services', [])
         chunkedMode: false
       };
 
+      var deferred = $q.defer();
       $cordovaFileTransfer.upload(url, filePath, options)
-      .then(function(result){
-        console.log(result);
-      }, function(err) {
-        console.log(err);
+      .then(function (result){
+        deferred.resolve(result);
+      }, function (err) {
+        deferred.reject (err);
       }, function (progress) {
-        console.log(progress);
+        var percentComplete = progress.loaded / progress.total * 100;
+        deferred.notify(percentComplete);
       });
+      return deferred.promise;
     };
 
   });
