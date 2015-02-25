@@ -8,7 +8,14 @@
 		<div class="profile-background">
 			<div class="row">
 			 	<div class="col">
-			 		<img ng-src="{{ user.mobileProfileImage }}" ng-click="changePicture()" class="img-circle center-block profile-img-settings">
+			 		<img ng-src="{{ user.mobileProfileImage }}" class="img-circle center-block profile-img-settings">
+			 		<progress-arc class="progress-circle" ng-click="changePicture()"
+					    size="142"
+					    stroke="#fff"
+					    stroke-width="2"
+					    complete="0.5"
+					    counter-clockwise="false">
+					</progress-arc>
 			 	</div>
 			</div>
 		</div>

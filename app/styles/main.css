@@ -142,7 +142,7 @@ fieldset[disabled] .form-control {
 .profile-img-settings{
 	width: 140px;
 	height: 140px;
-	border: 2px solid #fff;
+	border: 2px solid transparent;
 	padding: 5px;
 }
 
@@ -329,4 +329,14 @@ input::-webkit-inner-spin-button {
 
 .button-padding{
 	padding: 0 10px 0 10px;
+}
+
+.progress-circle{
+	position: fixed;
+	top: 9px;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	width: 142px;
 }
