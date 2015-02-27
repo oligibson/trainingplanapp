@@ -243,6 +243,10 @@ fieldset[disabled] .form-control {
 	color: #4a87ee;
 }
 
+.item-input-text-right{
+	padding-right: 16px;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
