@@ -358,11 +358,14 @@ angular.module('Training.services', [])
       var deferred = $q.defer();
       $cordovaFileTransfer.upload(url, filePath, options)
       .then(function (result){
-        deferred.resolve(result);
+        var newResult = JSON.parse(result.response);
+        user.mobileProfileImage = newResult.mobileProfileImage;
+        localStorage.setItem('user', JSON.stringify(user));
+        deferred.resolve(newResult);
       }, function (err) {
         deferred.reject (err);
       }, function (progress) {
-        var percentComplete = progress.loaded / progress.total * 100;
+        var percentComplete = progress.loaded / progress.total;
         deferred.notify(percentComplete);
       });
       return deferred.promise;

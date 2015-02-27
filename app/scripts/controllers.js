@@ -272,6 +272,7 @@ angular.module('Training.controllers', [])
 .controller('ProfileSettingsCtrl', function($scope, $state, $location, $ionicLoading, $cordovaDialogs, $ionicActionSheet, $cordovaCamera, Profile, Auth, Upload) {
 
 	$scope.user = Profile.getLocalUser();
+	$scope.progress = 1;
 
 	$scope.changePassword = function (){
 		$state.go('tab.profile-password');
@@ -348,16 +349,18 @@ angular.module('Training.controllers', [])
 				}
 
 				$cordovaCamera.getPicture(options).then(function (imageData){
-					console.log(imageData);
 					StatusBar.styleLightContent();
+					$scope.progress = 0;
 					Upload.profilePic($scope.user, imageData).then(function (result){
-						console.log(result.response.mobileProfileImage);
-						$scope.user.mobileProfileImage = result.response.mobileProfileImage;
+						$scope.progress = 1;
+						$scope.user.mobileProfileImage = result.mobileProfileImage;
 					}, function (err){
 						console.log(err);
+						$scope.progress = 1;
 						$cordovaDialogs.alert('We could not upload your photo at this time, please try again.', 'Connection Error');
 					}, function (p){
 						console.log(p);
+						$scope.progress = p;
 					});
 				}, function(err){
 					console.log(err);
