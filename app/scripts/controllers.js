@@ -14,8 +14,11 @@ angular.module('Training.controllers', [])
 		}, function (err){
 			$scope.loginButton = 'Login';
 			$scope.user.password = undefined;
-			console.log(err);
-			$cordovaDialogs.confirm('Incorrect username or password, please try again', 'Login Error', 'Try Again');
+			if(err.status === 0){
+				$cordovaDialogs.alert('We could not connect to the internet, please try again.', 'Time Out');
+			}else{
+				$cordovaDialogs.confirm('Incorrect username or password, please try again', 'Login Error', 'Try Again');
+			}
 		});
 	};
 
@@ -33,7 +36,11 @@ angular.module('Training.controllers', [])
 		Auth.signup($scope.user).then(function (){
 			$state.go('tab.record');
 		}, function (err){
-			$cordovaDialogs.confirm(err.data.errors.email.message, 'User Exists', 'Try Again');
+			console.log(err);
+			if(err.status !== 0 && err.status !== 401){
+				console.log('hello');
+				$cordovaDialogs.confirm('This email address is already registered, please login or use another address', 'User Exists', 'Try Again');
+			}
 		});
 	};
 })
@@ -50,6 +57,7 @@ angular.module('Training.controllers', [])
 			$scope.sessions = Feed.getLocal();
 			$scope.$broadcast('scroll.refreshComplete');
 		}, function (error){
+			$scope.$broadcast('scroll.refreshComplete');
 			console.log(error);
 		});
 	};
@@ -195,6 +203,7 @@ angular.module('Training.controllers', [])
 			});
 			$location.path('/tab/record');
 		}, function (error){
+			$scope.button = 'Save Session';
 			console.log(error);
 		});
 	};
@@ -287,7 +296,6 @@ angular.module('Training.controllers', [])
 			$location.path('/tab/profile');
 		}, function (error){
 			$ionicLoading.hide();
-			$cordovaDialogs.alert('Please try again later', 'Connection Error');
 			console.log(error);
 		});
 	};
@@ -303,9 +311,11 @@ angular.module('Training.controllers', [])
 			destructiveButtonClicked: function(){
 				Profile.deleteUser($scope.user).then(function (){
 					Auth.signout();
-				}, function (error){
-					$cordovaDialogs.alert('We could not delete your account at this time', 'Connection Error');
-					console.log(error);
+				}, function (err){
+					if(err.status !== 0 && err.status !== 401){
+						$cordovaDialogs.alert('We could not delete your account at this time', 'Connection Error');
+					}
+					console.log(err);
 				});
 				return true;
 			}
@@ -406,10 +416,12 @@ angular.module('Training.controllers', [])
 						.then(function() {
 					      $state.go('tab.profile');
 					    });
-					}, function (){
+					}, function (err){
 						$scope.pass = {};
 						$scope.button = 'Save Password';
-						$cordovaDialogs.alert('Your password could not be updated, please try again.', 'Error');
+						if(err.status !== 0 && err.status !== 401){
+							$cordovaDialogs.alert('Your password could not be updated, please try again.', 'Error');
+						}
 					});
 					return true;
 				}

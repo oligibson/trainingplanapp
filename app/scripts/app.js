@@ -36,8 +36,10 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
       var user = localStorage.getItem('user_id');
       var token = localStorage.getItem('token');
       if(user !== null || token !== null){
-        $cordovaSplashscreen.hide();
         $state.go('tab.feed');
+        setTimeout(function() {
+          $cordovaSplashscreen.hide();
+        }, 100);
       }else{
         $cordovaSplashscreen.hide();
       }

@@ -1,9 +1,9 @@
 'use strict';
 angular.module('Training.services', [])
 
-.service('Rest', function ($q, $http) {
+.service('Rest', function ($q, $http, $cordovaDialogs, $state) {
     
-    this.send = function (type, url, timeout, data, token){
+    this.send = function (type, url, timeout, data, token, showTimeout){
       var deferred = $q.defer();
       $http({
         method: type,
@@ -19,14 +19,20 @@ angular.module('Training.services', [])
         deferred.resolve(result.data);
       }, function (error){
         console.log(error);
-        if(error.status === 0){
+        if(error.status === 0 && showTimeout){
           console.log('Timed Out');
-          // Add function here to handle timeout
+          $cordovaDialogs.alert('We could not connect to the internet, please try again.', 'Time Out');
           return deferred.reject({ status: 0, message: 'Request Timed Out'});
         }
         else if(error.status === 401){
           console.log('unauthorised');
-          //Auth.unauthorised();
+          $cordovaDialogs.alert('Please login and try again', 'Authentication Error');
+          localStorage.removeItem('currentSession');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user_id');
+          localStorage.removeItem('user');
+          localStorage.removeItem('sessions');
+          $state.go('login');
           return deferred.reject({ status: 401, message: 'Your Token has Expired'});
         }
         else{
@@ -47,7 +53,7 @@ angular.module('Training.services', [])
       var params = JSON.stringify(data);
 
       var deferred = $q.defer();
-      Rest.send('POST', url, 5000, params, null)
+      Rest.send('POST', url, 5000, params, null, true)
       .then(function (result){
         localStorage.setItem('token', result.token);
         localStorage.setItem('user_id', result.user._id);
@@ -113,7 +119,7 @@ angular.module('Training.services', [])
         deferred.reject('User not previously logged in');
       }
 
-      Rest.send('GET', url, 5000, null, token)
+      Rest.send('GET', url, 5000, null, token, true)
       .then(function (result){
         localStorage.setItem('token', result.token);
         deferred.resolve(result);
@@ -130,7 +136,7 @@ angular.module('Training.services', [])
       var url = '/users/' + localStorage.getItem('user_id') + '/password';
 
       var deferred = $q.defer();
-      Rest.send('PUT', url, 5000, params, token)
+      Rest.send('PUT', url, 5000, params, token, true)
       .then(function (result){
         deferred.resolve(result);
       }, function (error){
@@ -149,7 +155,7 @@ angular.module('Training.services', [])
       var params = JSON.stringify(data);
 
       var deferred = $q.defer();
-      Rest.send('POST', url, 5000, params, token)
+      Rest.send('POST', url, 5000, params, token, true)
       .then(function (result){
         localStorage.setItem('currentSession', JSON.stringify(result));
         deferred.resolve(result);
@@ -165,7 +171,7 @@ angular.module('Training.services', [])
       var url = '/sessions/' + data._id;
 
       var deferred = $q.defer();
-      Rest.send('PUT', url, 5000, params, null)
+      Rest.send('PUT', url, 5000, params, null, true)
       .then(function (result){
         console.log(result);
         deferred.resolve(result);
@@ -180,7 +186,7 @@ angular.module('Training.services', [])
       var url = '/sessions/' + sessionId;
 
       var deferred = $q.defer();
-      Rest.send('DELETE', url, 5000, null, token)
+      Rest.send('DELETE', url, 5000, null, token, true)
       .then(function(result){
         console.log(result);
         deferred.resolve(result);
@@ -232,7 +238,7 @@ angular.module('Training.services', [])
       var token = localStorage.getItem('token');
       var url = '/sessions/user/' + user;
       var deferred = $q.defer();
-      Rest.send('GET', url, 5000, null, token)
+      Rest.send('GET', url, 5000, null, token, true)
       .then(function (result){
         console.log(result);
         localStorage.setItem('sessions', JSON.stringify(result));
@@ -282,7 +288,7 @@ angular.module('Training.services', [])
       var url = '/users/' + user;
 
       var deferred = $q.defer();
-      Rest.send('GET', url, 5000, null, token)
+      Rest.send('GET', url, 5000, null, token, false)
       .then(function (result){
         localStorage.setItem('user', JSON.stringify(result));
         deferred.resolve(result);
@@ -333,7 +339,7 @@ angular.module('Training.services', [])
       var url = '/users/' + user._id;
 
       var deferred = $q.defer();
-      Rest.send('DELETE', url, 5000, null, token)
+      Rest.send('DELETE', url, 5000, null, token, true)
       .then(function (result){
         deferred.resolve(result);
       }, function (error){
