@@ -84,8 +84,8 @@ angular.module('Training.controllers', [])
 			destructiveButtonClicked: function(){
 				Record.deleteCurrentServerSession(session._id).then(function(){
 					Feed.deleteLocalSession(session._id);
+					$scope.sessions = Feed.getLocal();
 				});
-				$scope.sessions = Feed.getLocal();
 				return true;
 			}
 		});
