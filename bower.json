@@ -4,7 +4,8 @@
   "dependencies": {
     "ionic": "v1.0.0-beta.14",
     "ngCordova": "~0.1.7-alpha",
-    "angular-progress-arc": "~1.0.0"
+    "angular-progress-arc": "~1.0.0",
+    "ionic-contrib-tinder-cards": "*"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.17",

@@ -166,6 +166,10 @@ angular.module('Training.controllers', [])
 		});
 	};
 
+	$scope.swipe = function (index){
+		console.log(index);
+	}
+
 	$scope.completeSession = function (){
 
 		if($scope.session.exercises.length < 1){
