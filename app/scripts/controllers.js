@@ -82,9 +82,10 @@ angular.module('Training.controllers', [])
 				return true;
 			},
 			destructiveButtonClicked: function(){
-				Feed.deleteLocalSession(session._id);
+				Record.deleteCurrentServerSession(session._id).then(function(){
+					Feed.deleteLocalSession(session._id);
+				});
 				$scope.sessions = Feed.getLocal();
-				Record.deleteCurrentServerSession(session._id);
 				return true;
 			}
 		});
