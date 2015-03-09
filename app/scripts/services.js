@@ -15,17 +15,13 @@ angular.module('Training.services', [])
         },
         timeout: timeout
       }).then(function (result){
-        console.log(result);
         deferred.resolve(result.data);
       }, function (error){
-        console.log(error);
         if(error.status === 0 && showTimeout){
-          console.log('Timed Out');
           $cordovaDialogs.alert('We could not connect to the internet, please try again.', 'Time Out');
           return deferred.reject({ status: 0, message: 'Request Timed Out'});
         }
         else if(error.status === 401){
-          console.log('unauthorised');
           $cordovaDialogs.alert('Please login and try again', 'Authentication Error');
           localStorage.removeItem('currentSession');
           localStorage.removeItem('token');
@@ -81,9 +77,6 @@ angular.module('Training.services', [])
         localStorage.setItem('user', JSON.stringify(result.data.user));
         deferred.resolve(result.data);
       }, function (error){
-        if(error.status === 0){
-          console.log('Timed Out');
-        }
         deferred.reject(error);
       });
       return deferred.promise;
@@ -160,7 +153,6 @@ angular.module('Training.services', [])
         localStorage.setItem('currentSession', JSON.stringify(result));
         deferred.resolve(result);
       }, function (error){
-        console.log(error);
         deferred.reject(error);
       });
       return deferred.promise;
@@ -173,7 +165,6 @@ angular.module('Training.services', [])
       var deferred = $q.defer();
       Rest.send('PUT', url, 5000, params, null, true)
       .then(function (result){
-        console.log(result);
         deferred.resolve(result);
       }, function (error){
         deferred.reject(error);
@@ -188,7 +179,6 @@ angular.module('Training.services', [])
       var deferred = $q.defer();
       Rest.send('DELETE', url, 5000, null, token, true)
       .then(function(result){
-        console.log(result);
         deferred.resolve(result);
       }, function (error){
         deferred.reject(error);
@@ -198,7 +188,6 @@ angular.module('Training.services', [])
 
     this.getCurrentSession = function(){
       var session = JSON.parse(localStorage.getItem('currentSession'));
-      console.log(session);
       return session;
     };
 
@@ -240,11 +229,9 @@ angular.module('Training.services', [])
       var deferred = $q.defer();
       Rest.send('GET', url, 5000, null, token, true)
       .then(function (result){
-        console.log(result);
         localStorage.setItem('sessions', JSON.stringify(result));
         deferred.resolve(result);
       }, function (error){
-        console.log(error);
         deferred.reject(error);
       });
       return deferred.promise;
@@ -328,7 +315,6 @@ angular.module('Training.services', [])
         localStorage.setItem('user', JSON.stringify(result));
         deferred.resolve(result);
       }, function (error){
-        console.log(error);
         deferred.reject(error);
       });
       return deferred.promise;

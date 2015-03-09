@@ -36,9 +36,7 @@ angular.module('Training.controllers', [])
 		Auth.signup($scope.user).then(function (){
 			$state.go('tab.record');
 		}, function (err){
-			console.log(err);
 			if(err.status !== 0 && err.status !== 401){
-				console.log('hello');
 				$cordovaDialogs.confirm('This email address is already registered, please login or use another address', 'User Exists', 'Try Again');
 			}
 		});
@@ -56,9 +54,8 @@ angular.module('Training.controllers', [])
 	    .then(function() {
 			$scope.sessions = Feed.getLocal();
 			$scope.$broadcast('scroll.refreshComplete');
-		}, function (error){
+		}, function (){
 			$scope.$broadcast('scroll.refreshComplete');
-			console.log(error);
 		});
 	};
 
@@ -194,9 +191,7 @@ angular.module('Training.controllers', [])
 	$scope.saveSession = function (){
 		$scope.button = 'Please Wait...';
 		$scope.session.completed = true;
-		console.log($scope.session);
 		Record.completeSession($scope.session).then(function(result){
-			console.log(result);
 			Record.deleteCurrentSession();
 			$ionicHistory.nextViewOptions({
 				historyRoot: true,
@@ -370,7 +365,6 @@ angular.module('Training.controllers', [])
 						$scope.progress = 1;
 						$cordovaDialogs.alert('We could not upload your photo at this time, please try again.', 'Connection Error');
 					}, function (p){
-						console.log(p);
 						$scope.progress = p;
 					});
 				}, function(err){
@@ -404,7 +398,6 @@ angular.module('Training.controllers', [])
 			},
 			buttonClicked: function(){
 				if($scope.pass.oldPassword.length < 1 || $scope.pass.newPassword.length < 1 ){
-					console.log('Error');
 					$scope.button = 'Save Password';
 					$scope.pass = {};
 					$cordovaDialogs.alert('Please fill in both password fields', 'Error');

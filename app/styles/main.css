@@ -180,7 +180,8 @@ fieldset[disabled] .form-control {
 }
 
 .profile-content{
-	top: 319px;
+	top: 339px !important
+;
 }
 
 .weight-input{
