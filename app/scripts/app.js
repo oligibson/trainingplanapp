@@ -27,7 +27,6 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
         setTimeout(function() {
           $cordovaSplashscreen.hide();
         }, 100);
-        $cordovaSplashscreen.hide();
       }, function (err){
         $cordovaSplashscreen.hide();
         console.log('token expired', err);
@@ -36,7 +35,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
       var user = localStorage.getItem('user_id');
       var token = localStorage.getItem('token');
       if(user !== null || token !== null){
-        $state.go('tab.feed');
+        $state.go('tab.feed', $cordovaSplashscreen.hide());
         setTimeout(function() {
           $cordovaSplashscreen.hide();
         }, 100);
