@@ -4,7 +4,7 @@
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
+    <author email="oli@gymtraker.com" href="http://gymtraker.com">
         Oli Gibson
     </author>
     <content src="index.html" />

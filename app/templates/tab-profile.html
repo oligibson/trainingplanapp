@@ -11,31 +11,32 @@
 		<div class="profile-background">
 			<div class="row">
 			 	<div class="col">
-			 		<img ng-src="{{ user.mobileProfileImage }}" class="img-circle center-block profile-img">
+			 		<img ng-src="{{ profileuser.mobileProfileImage }}" class="img-circle center-block profile-img">
 			 	</div>
 			</div>
 			<div class="row profile-header">
 				<div class="col">
-			 		<h3 class="text-center">{{user.fname}} {{user.lname}}</h3>
+			 		<h3 class="text-center">{{profileuser.fname}} {{profileuser.lname}}</h3>
 			 	</div>
 			</div>
 			<div class="row profile-bar">
 				<div class="col">
-			 		<h3 class="text-center">{{user.sessionsThisWeek || 0}}</h3>
+			 		<h3 class="text-center">{{profileuser.sessionsThisWeek || 0}}</h3>
 			 		<h6 class="text-center">This Week</h6>
 			 	</div>
 			 	<div class="col">
-			 		<h3 class="text-center">{{user.sessionsTotal || 0}}</h3>
+			 		<h3 class="text-center">{{profileuser.sessionsTotal || 0}}</h3>
 			 		<h6 class="text-center">Total Sessions</h6>
 			 	</div>
 			 	<div class="col">
-			 		<h3 class="text-center">{{user.lastSession | date:'dd MMM' }}</h3>
+			 		<h3 class="text-center">{{profileuser.lastSession | date:'dd MMM' }}</h3>
 			 		<h6 class="text-center">Last Session</h6>
 			 	</div>
 			</div>
 		</div>
 	</ion-header-bar>
 	<ion-content class="profile-content">
+		<div class="nosession" ng-show="!sessions.length">No Recents Sessions</div>
 		<ion-list>
 			<div class="item item-divider">
 		    	Recent Sessions

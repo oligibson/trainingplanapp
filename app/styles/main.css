@@ -341,6 +341,25 @@ input::-webkit-inner-spin-button {
 	margin: 60% auto 30% auto;
 }
 
+.nosession{
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	z-index: 0;
+	overflow: hidden;
+	margin: 10px;
+	min-width: 30px;
+	height: px;
+	text-align: center;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 17px;
+	font-weight: 500;
+	line-height: 25px;
+	color: rgb(122, 122, 122);
+}
+
 .button-padding{
 	padding: 0 10px 0 10px;
 }

@@ -79,10 +79,9 @@ angular.module('Training.controllers', [])
 				return true;
 			},
 			destructiveButtonClicked: function(){
-				Record.deleteCurrentServerSession(session._id).then(function(){
-					Feed.deleteLocalSession(session._id);
-					$scope.sessions = Feed.getLocal();
-				});
+				Feed.deleteLocalSession(session._id);
+				$scope.sessions = Feed.getLocal();
+				Record.deleteCurrentServerSession(session._id);
 				return true;
 			}
 		});
@@ -191,7 +190,7 @@ angular.module('Training.controllers', [])
 	$scope.saveSession = function (){
 		$scope.button = 'Please Wait...';
 		$scope.session.completed = true;
-		Record.completeSession($scope.session).then(function(result){
+		Record.completeSession($scope.session).then(function(){
 			Record.deleteCurrentSession();
 			$ionicHistory.nextViewOptions({
 				historyRoot: true,
@@ -232,10 +231,10 @@ angular.module('Training.controllers', [])
 
 	$scope.getUser = function (){
 
-		$scope.user = Profile.getLocalUser();
+		$scope.profileuser = Profile.getLocalUser();
 
 		Profile.getUser($scope.id).then(function (){
-			$scope.user = Profile.getLocalUser();
+			$scope.profileuser = Profile.getLocalUser();
 		}, function (error){
 			console.log(error);
 		});

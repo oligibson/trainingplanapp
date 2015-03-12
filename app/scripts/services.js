@@ -10,11 +10,13 @@ angular.module('Training.services', [])
         url: 'http://trainingplanserver.herokuapp.com/api' + url,
         data: data,
         headers: {
-          'Content-Type': 'application/json',
+          //'Content-Type': 'application/json',
           'x-access-token': token
         },
-        timeout: timeout
+        timeout: timeout,
+        cache: false
       }).then(function (result){
+        console.log(result);
         deferred.resolve(result.data);
       }, function (error){
         if(error.status === 0 && showTimeout){
@@ -112,7 +114,7 @@ angular.module('Training.services', [])
         deferred.reject('User not previously logged in');
       }
 
-      Rest.send('GET', url, 5000, null, token, true)
+      Rest.send('GET', url, 5000, null, token, false)
       .then(function (result){
         localStorage.setItem('token', result.token);
         deferred.resolve(result);
@@ -276,9 +278,9 @@ angular.module('Training.services', [])
 
       var deferred = $q.defer();
       Rest.send('GET', url, 5000, null, token, false)
-      .then(function (result){
-        localStorage.setItem('user', JSON.stringify(result));
-        deferred.resolve(result);
+      .then(function (updateduser){
+        localStorage.setItem('user', JSON.stringify(updateduser));
+        deferred.resolve(updateduser);
       }, function (error){
         deferred.reject(error);
       });
@@ -352,6 +354,7 @@ angular.module('Training.services', [])
       .then(function (result){
         var newResult = JSON.parse(result.response);
         user.mobileProfileImage = newResult.mobileProfileImage;
+        console.log(user.mobileProfileImage);
         localStorage.setItem('user', JSON.stringify(user));
         deferred.resolve(newResult);
       }, function (err) {

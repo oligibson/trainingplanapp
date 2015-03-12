@@ -1,6 +1,6 @@
 <ion-view title="Feed">
 	<ion-nav-buttons side="left">
-		<button class="button button-clear button-light" ng-click="toggleDelete()">
+		<button class="button button-clear button-light" ng-hide="!sessions.length" ng-click="toggleDelete()">
         	{{deleteButton}}
     	</button>
   	</ion-nav-buttons>
@@ -9,6 +9,7 @@
 		    pulling-text="Pull to refresh..."
 		    on-refresh="Refresh()">
 		</ion-refresher>
+		<div class="nosession" ng-show="!sessions.length">No Sessions Recorded<br>Pull to Refresh</div>
 		<ion-list show-delete="showDelete">
 			<ion-item class="item item-icon-left item-icon-right" ng-repeat="session in sessions | orderBy:'date':true" type="item-text-wrap" href="#/tab/feed/{{session._id}}">
 				<i class="icon icon-icon-dumbbell"></i>

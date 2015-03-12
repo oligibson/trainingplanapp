@@ -81,6 +81,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
 
     .state('tab.feed', {
       url: '/feed',
+      cache: false,
       views: {
         'tab-feed': {
           templateUrl: 'templates/tab-feed.html',
