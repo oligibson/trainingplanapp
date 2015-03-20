@@ -5,8 +5,8 @@ angular.module('Training.services', [])
     
     this.init = function(){
       return $q.when($rootScope.sessiondb = new PouchDB('sessions'))
-      .then(function (result) {
-        return result;
+      .then(function () {
+          return result;
       });
     };
 
@@ -26,9 +26,9 @@ angular.module('Training.services', [])
       return deferred.promise;
     };
 
-    this.bulkretrive = function(){
+    this.bulkretrive = function(db){
       console.log('bulkretrive');
-      return $q.when($rootScope.sessiondb.allDocs({
+      return $q.when($rootScope[db].allDocs({
         include_docs: true // jshint ignore:line
       }))
       .then(function (result) {
@@ -39,9 +39,9 @@ angular.module('Training.services', [])
       });
     };
 
-    this.get = function(id){
+    this.get = function(db, id){
       console.log('get');
-      return $q.when($rootScope.sessiondb.get(id))
+      return $q.when($rootScope[db].get(id))
       .then(function (result) {
         return result;
       }).catch(function (err) {
@@ -49,9 +49,9 @@ angular.module('Training.services', [])
       });
     };
 
-    this.post = function(doc){
+    this.post = function(db, doc){
       console.log('post');
-      return $q.when($rootScope.sessiondb.post(doc))
+      return $q.when($rootScope[db].post(doc))
       .then(function (result) {
         return result;
       }).catch(function (err) {
@@ -59,9 +59,9 @@ angular.module('Training.services', [])
       });
     };
 
-    this.put = function(doc){
+    this.put = function(db, doc){
       console.log('put');
-      return $q.when($rootScope.sessiondb.put(doc))
+      return $q.when($rootScope[db].put(doc))
       .then(function (result) {
         return result;
       }).catch(function (err) {
@@ -69,9 +69,9 @@ angular.module('Training.services', [])
       });
     };
 
-    this.delete = function(doc){
+    this.delete = function(db, doc){
       console.log('delete');
-      return $q.when($rootScope.sessiondb.remove(doc))
+      return $q.when($rootScope[db].remove(doc))
       .then(function (result) {
         console.log(result);
         return result;
@@ -228,7 +228,7 @@ angular.module('Training.services', [])
     this.create = function(data){
       console.log(data);
       var deferred = $q.defer();
-      DB.post(data).then(function(result){
+      DB.post('sessiondb', data).then(function(result){
         deferred.resolve(result);
       }, function(error){
         deferred.reject(error);
@@ -238,7 +238,7 @@ angular.module('Training.services', [])
 
     this.completeSession = function(session){
       var deferred = $q.defer();
-      DB.put(session).then(function(result){
+      DB.put('sessiondb', session).then(function(result){
         // Sync with server here...
         console.log(result);
         deferred.resolve(result);
@@ -263,7 +263,7 @@ angular.module('Training.services', [])
 
     this.getCurrentSession = function(sessionId){
       var deferred = $q.defer();
-      DB.get(sessionId).then(function(result){
+      DB.get('sessiondb', sessionId).then(function(result){
         deferred.resolve(result);
       }, function(error){
         deferred.reject(error);
@@ -273,7 +273,7 @@ angular.module('Training.services', [])
 
     this.updateCurrentSession = function(session){
       var deferred = $q.defer();
-      DB.put(session).then(function(result){
+      DB.put('sessiondb', session).then(function(result){
         console.log(result);
         deferred.resolve(result);
       }, function(error){
@@ -284,7 +284,7 @@ angular.module('Training.services', [])
 
     this.deleteCurrentSession = function(session){
       var deferred = $q.defer();
-      DB.delete(session).then(function(result){
+      DB.delete('sessiondb', session).then(function(result){
         console.log(result);
         deferred.resolve(result);
       }, function(error){
@@ -319,7 +319,7 @@ angular.module('Training.services', [])
 
     this.getCurrent = function(sessionId) {
       var deferred = $q.defer();
-      DB.get(sessionId).then(function(result){
+      DB.get('sessiondb', sessionId).then(function(result){
         deferred.resolve(result);
       }, function(error){
         deferred.reject(error);
@@ -329,7 +329,7 @@ angular.module('Training.services', [])
 
     this.getLocal = function() {
       var deferred = $q.defer();
-      DB.bulkretrive().then(function(result){
+      DB.bulkretrive('sessiondb').then(function(result){
         deferred.resolve(result);
       }, function(error){
         deferred.reject(error);
