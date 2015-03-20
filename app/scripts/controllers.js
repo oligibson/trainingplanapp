@@ -43,7 +43,7 @@ angular.module('Training.controllers', [])
 	};
 })
 
-.controller('FeedCtrl', function($scope, $ionicLoading, $ionicTabsDelegate, $ionicActionSheet, Feed, Record) {
+.controller('FeedCtrl', function($scope, $ionicLoading, $ionicTabsDelegate, $ionicActionSheet, Feed) {
 
 	$scope.deleteButton = 'Edit';
 	$scope.showDelete = false;
@@ -81,7 +81,6 @@ angular.module('Training.controllers', [])
 			destructiveButtonClicked: function(){
 				Feed.deleteLocalSession(session._id);
 				$scope.sessions = Feed.getLocal();
-				Record.deleteCurrentServerSession(session._id);
 				return true;
 			}
 		});
@@ -112,7 +111,7 @@ angular.module('Training.controllers', [])
 
 .controller('RecordCtrl', function($scope, $state, $location, $ionicHistory, $ionicTabsDelegate, Record) {
 
-	$scope.session = { userId: localStorage.getItem('user_id'), activity: 'Gym', name: Record.sessionName(), completed: false};
+	$scope.session = { userId: localStorage.getItem('user_id'), activity: 'Gym', name: Record.sessionName(), completed: false, exercises: [], comments: '', type: ''};
 	$scope.button = 'Record Session';
 
 	$scope.createSession = function (){
@@ -131,10 +130,11 @@ angular.module('Training.controllers', [])
 	};
 })
 
-.controller('RecordSessionCtrl', function($scope, $stateParams, $ionicActionSheet, $ionicPopup, $cordovaDialogs, $location, Record) {
+.controller('RecordSessionCtrl', function($scope, $state, $stateParams, $ionicActionSheet, $ionicPopup, $cordovaDialogs, Record) {
 
 	Record.getCurrentSession($stateParams.sessionId).then(function (result){
 		$scope.session = result;
+		console.log($scope.session);
 	}, function (error){
 		console.log(error);
 	});
@@ -142,14 +142,22 @@ angular.module('Training.controllers', [])
 	$scope.addExercise = function (){
 		console.log('adding exercise');
 		$scope.session.exercises.push({setNo: 1, sets: [{reps: 0, weight: 0}]});
-		Record.updateCurrentSession($scope.session);
+		Record.updateCurrentSession($scope.session).then(function (result){
+			$scope.session._rev = result.rev;
+		}, function (error){
+			console.log(error);
+		});
 	};
 
 	$scope.addSet = function (exercise, index){
 		var newSet = exercise.sets[exercise.sets.length -1];
 		$scope.session.exercises[index].sets.push({reps: newSet.reps, weight: newSet.weight});
 		$scope.session.exercises[index].setNo = $scope.session.exercises[index].setNo + 1;
-		Record.updateCurrentSession($scope.session);
+		Record.updateCurrentSession($scope.session).then(function (result){
+			$scope.session._rev = result.rev;
+		}, function (error){
+			console.log(error);
+		});
 	};
 
 	$scope.deleteExercise = function (index){
@@ -162,7 +170,12 @@ angular.module('Training.controllers', [])
 			},
 			destructiveButtonClicked: function(){
 				$scope.session.exercises.splice(index, 1);
-				Record.updateCurrentSession($scope.session);
+				$scope.session.exercises[index].setNo = $scope.session.exercises[index].setNo + 1;
+				Record.updateCurrentSession($scope.session).then(function (result){
+					$scope.session._rev = result.rev;
+				}, function (error){
+					console.log(error);
+				});
 				return true;
 			}
 		});
@@ -174,35 +187,42 @@ angular.module('Training.controllers', [])
 			$cordovaDialogs.confirm('This session contains no exercises', 'No Exercises Detected', ['Discard','Complete'])
 			.then(function(buttonIndex) {
 				if(buttonIndex === 1){
-					Record.deleteCurrentSession();
-					Record.deleteCurrentServerSession($scope.session._id);
-					$location.path('/tab/record');
+					Record.deleteCurrentSession($scope.session).then(function (){
+						$state.go('tab.record');
+					}, function (error){
+						console.log(error);
+					});
 				}else if(buttonIndex === 2){
-					$location.path('/tab/record/session/complete');
+					$state.go('tab.record-complete', { sessionId: $scope.session._id });
 				}
 			});
 		}else{
-			$location.path('/tab/record/session/complete');
+			$state.go('tab.record-complete', { sessionId: $scope.session._id });
 		}
 	};
 
 })
 
-.controller('RecordCompleteCtrl', function($scope, $ionicActionSheet, $ionicHistory, $location, Record) {
+.controller('RecordCompleteCtrl', function($scope, $state, $stateParams, $ionicActionSheet, $ionicHistory, Record) {
 
-	$scope.session = Record.getCurrentSession();
+	Record.getCurrentSession($stateParams.sessionId).then(function (result){
+		$scope.session = result;
+		console.log($scope.session);
+	}, function (error){
+		console.log(error);
+	});
+
 	$scope.button = 'Save Session';
 
 	$scope.saveSession = function (){
 		$scope.button = 'Please Wait...';
 		$scope.session.completed = true;
 		Record.completeSession($scope.session).then(function(){
-			Record.deleteCurrentSession();
 			$ionicHistory.nextViewOptions({
 				historyRoot: true,
 				disableBack: true
 			});
-			$location.path('/tab/record');
+			$state.go('tab.record');
 		}, function (error){
 			$scope.button = 'Save Session';
 			console.log(error);
@@ -218,13 +238,15 @@ angular.module('Training.controllers', [])
 				return true;
 			},
 			destructiveButtonClicked: function(){
-				Record.deleteCurrentSession();
-				Record.deleteCurrentServerSession($scope.session._id);
-				$ionicHistory.nextViewOptions({
-					historyRoot: true,
-					disableBack: true
+				Record.deleteCurrentSession($scope.session).then(function (){
+					$ionicHistory.nextViewOptions({
+						historyRoot: true,
+						disableBack: true
+					});
+					$state.go('tab.record');
+				}, function (error){
+					console.log(error);
 				});
-				$location.path('/tab/record');
 			}
 		});
 	};

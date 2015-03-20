@@ -59,6 +59,16 @@ angular.module('Training.services', [])
       });
     };
 
+    this.put = function(doc){
+      console.log('put');
+      return $q.when($rootScope.sessiondb.put(doc))
+      .then(function (result) {
+        return result;
+      }).catch(function (err) {
+        console.log(err);
+      });
+    };
+
     this.delete = function(doc){
       console.log('delete');
       return $q.when($rootScope.sessiondb.remove(doc))
@@ -232,7 +242,17 @@ angular.module('Training.services', [])
       return deferred.promise;
     };
 
-    this.completeSession = function(data){
+    this.completeSession = function(session){
+      var deferred = $q.defer();
+      DB.put(session).then(function(result){
+        // Sync with server here...
+        console.log(result);
+        deferred.resolve(result);
+      }, function(error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
+      /*
       var params = JSON.stringify(data);
       var url = '/sessions/' + data._id;
 
@@ -244,20 +264,7 @@ angular.module('Training.services', [])
         deferred.reject(error);
       });
       return deferred.promise;
-    };
-
-    this.deleteCurrentServerSession = function(sessionId){
-      var token = localStorage.getItem('token');
-      var url = '/sessions/' + sessionId;
-
-      var deferred = $q.defer();
-      Rest.send('DELETE', url, 5000, null, token, true)
-      .then(function(result){
-        deferred.resolve(result);
-      }, function (error){
-        deferred.reject(error);
-      });
-      return deferred.promise;
+      */
     };
 
     this.getCurrentSession = function(sessionId){
@@ -271,11 +278,25 @@ angular.module('Training.services', [])
     };
 
     this.updateCurrentSession = function(session){
-      localStorage.setItem('currentSession', JSON.stringify(session));
+      var deferred = $q.defer();
+      DB.put(session).then(function(result){
+        console.log(result);
+        deferred.resolve(result);
+      }, function(error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
     };
 
-    this.deleteCurrentSession = function(){
-      localStorage.removeItem('currentSession');
+    this.deleteCurrentSession = function(session){
+      var deferred = $q.defer();
+      DB.delete(session).then(function(result){
+        console.log(result);
+        deferred.resolve(result);
+      }, function(error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
     };
 
     this.sessionName = function() {
