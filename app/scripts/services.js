@@ -4,14 +4,19 @@ angular.module('Training.services', [])
 .service('DB', function ($q, $rootScope) {
     
     this.init = function(){
-      return $q.when($rootScope.sessiondb = new PouchDB('sessions'))
-      .then(function () {
-          return result;
+      var a = $q.when($rootScope.sessiondb = new PouchDB('sessions', {adapter: 'websql'}));
+      var b = $q.when($rootScope.user = new PouchDB('user', {adapter: 'websql'}));
+
+      return $q.all([a,b]).then(function(res){
+        console.log(res);
+        return res;
       });
+      
     };
 
     this.destroy = function(){
       $rootScope.sessiondb.destroy();
+      $rootScope.user.destroy();
     };
 
     this.bulkload = function(db, data){
@@ -156,9 +161,12 @@ angular.module('Training.services', [])
         localStorage.setItem('user_id', result.data.user._id);
         localStorage.setItem('user', JSON.stringify(result.data.user));
         DB.init().then(function(){
-          Rest.send('GET', '/sessions/user/' + result.data.user._id, 5000, null, result.data.token, false).then(function(result){
-            DB.bulkload('sessiondb', result).then(function(){
-              deferred.resolve();
+          DB.post('user', result.data).then(function(oli){
+            console.log(oli);
+            Rest.send('GET', '/sessions/user/' + result.data.user._id, 5000, null, result.data.token, false).then(function(result){
+              DB.bulkload('sessiondb', result).then(function(){
+                deferred.resolve();
+              });
             });
           });
         });
