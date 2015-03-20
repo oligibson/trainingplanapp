@@ -17,7 +17,7 @@ angular.module('Training.services', [])
     this.bulkload = function(db, data){
       console.log('bulkload');
       var deferred = $q.defer();
-      $rootScope.sessiondb.bulkDocs(data).then(function(result){
+      $rootScope[db].bulkDocs(data).then(function(result){
         deferred.resolve(result);
       }).catch(function (err) {
         console.log(err);
@@ -105,11 +105,9 @@ angular.module('Training.services', [])
         }
         else if(error.status === 401){
           $cordovaDialogs.alert('Please login and try again', 'Authentication Error');
-          localStorage.removeItem('currentSession');
           localStorage.removeItem('token');
           localStorage.removeItem('user_id');
           localStorage.removeItem('user');
-          localStorage.removeItem('sessions');
           $state.go('login');
           return deferred.reject({ status: 401, message: 'Your Token has Expired'});
         }
@@ -172,21 +170,17 @@ angular.module('Training.services', [])
 
     this.signout = function (){
       DB.destroy();
-      localStorage.removeItem('currentSession');
       localStorage.removeItem('token');
       localStorage.removeItem('user_id');
       localStorage.removeItem('user');
-      localStorage.removeItem('sessions');
       $state.go('login');
     };
 
     this.unauthorised = function (){
       $cordovaDialogs.alert('Please login and try again', 'Authentication Error');
-      localStorage.removeItem('currentSession');
       localStorage.removeItem('token');
       localStorage.removeItem('user_id');
       localStorage.removeItem('user');
-      localStorage.removeItem('sessions');
       $state.go('login');
     };
 
@@ -322,7 +316,28 @@ angular.module('Training.services', [])
   })
 
   .service('Feed', function ($q, Rest, DB) {
-    
+
+    this.getCurrent = function(sessionId) {
+      var deferred = $q.defer();
+      DB.get(sessionId).then(function(result){
+        deferred.resolve(result);
+      }, function(error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    };
+
+    this.getLocal = function() {
+      var deferred = $q.defer();
+      DB.bulkretrive().then(function(result){
+        deferred.resolve(result);
+      }, function(error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
+    };
+
+    /*
     this.getAll = function(user){
       var token = localStorage.getItem('token');
       var url = '/sessions/user/' + user;
@@ -332,16 +347,6 @@ angular.module('Training.services', [])
         localStorage.setItem('sessions', JSON.stringify(result));
         deferred.resolve(result);
       }, function (error){
-        deferred.reject(error);
-      });
-      return deferred.promise;
-    };
-
-    this.getCurrent = function(sessionId) {
-      var deferred = $q.defer();
-      DB.get(sessionId).then(function(result){
-        deferred.resolve(result);
-      }, function(error){
         deferred.reject(error);
       });
       return deferred.promise;
@@ -359,16 +364,7 @@ angular.module('Training.services', [])
       }
       return;
     };
-
-    this.getLocal = function() {
-      var deferred = $q.defer();
-      DB.bulkretrive().then(function(result){
-        deferred.resolve(result);
-      }, function(error){
-        deferred.reject(error);
-      });
-      return deferred.promise;
-    };
+    */
 
   })
 

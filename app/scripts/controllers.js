@@ -66,7 +66,6 @@ angular.module('Training.controllers', [])
 		}else{
 			$scope.showDelete = false;
 			$scope.deleteButton = 'Edit';
-			// Refresh local storage from server
 		}
 	};
 
@@ -257,6 +256,12 @@ angular.module('Training.controllers', [])
 
 	$scope.id = localStorage.getItem('user_id');
 
+	Feed.getLocal().then(function (result){
+		$scope.sessions = result;
+	}, function (error){
+		console.log(error);
+	});
+
 	$scope.getUser = function (){
 
 		$scope.profileuser = Profile.getLocalUser();
@@ -266,18 +271,6 @@ angular.module('Training.controllers', [])
 		}, function (error){
 			console.log(error);
 		});
-	};
-
-	$scope.getSessions = function (){
-		
-		$scope.sessions = Feed.getLocal();
-		
-		Feed.getAll($scope.id).then(function (){
-			$scope.sessions = Feed.getLocal();
-		}, function (error){
-			console.log(error);
-		});
-
 	};
 
 	$scope.signOut = function (){
@@ -294,8 +287,6 @@ angular.module('Training.controllers', [])
 			}
 		});
 	};
-
-	$scope.getSessions();
 
 	$scope.getUser();
 
