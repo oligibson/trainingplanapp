@@ -89,10 +89,8 @@ angular.module('Training.controllers', [])
 
 	$scope.getSessions = function (){
 		
-		$scope.sessions = Feed.getLocal();
-		
-		Feed.getAll(localStorage.getItem('user_id')).then(function (){
-			$scope.sessions = Feed.getLocal();
+		Feed.getLocal().then(function (result){
+			$scope.sessions = result;
 		}, function (error){
 			console.log(error);
 		});
@@ -104,7 +102,11 @@ angular.module('Training.controllers', [])
 
 .controller('SessionDetailCtrl', function($scope, $stateParams, Feed) {
 
-	$scope.session = Feed.getCurrent($stateParams.sessionId);
+	Feed.getCurrent($stateParams.sessionId).then(function (result){
+		$scope.session = result;
+	}, function (error){
+		console.log(error);
+	});
 
 })
 
@@ -352,7 +354,6 @@ angular.module('Training.controllers', [])
 						encodingType: Camera.EncodingType.JPEG,
 					};
 				}
-
 				$cordovaCamera.getPicture(options).then(function (imageData){
 					StatusBar.styleLightContent();
 					$scope.progress = 0;

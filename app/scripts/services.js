@@ -1,6 +1,68 @@
 'use strict';
 angular.module('Training.services', [])
 
+.service('DB', function ($q, $rootScope) {
+    
+    this.init = function(){
+      return $q.when($rootScope.sessiondb = new PouchDB('sessions'))
+      .then(function (result) {
+        return result;
+      });
+    };
+
+    this.destroy = function(){
+      $rootScope.sessiondb.destroy();
+    };
+
+    this.bulkload = function(db, data){
+      console.log('bulkload');
+      var deferred = $q.defer();
+      $rootScope.sessiondb.bulkDocs(data).then(function(result){
+        deferred.resolve(result);
+      }).catch(function (err) {
+        console.log(err);
+        deferred.reject(err);
+      });
+      return deferred.promise;
+    };
+
+    this.bulkretrive = function(){
+      console.log('bulkretrive');
+      return $q.when($rootScope.sessiondb.allDocs({
+        include_docs: true // jshint ignore:line
+      }))
+      .then(function (result) {
+        console.log(result);
+        return result.rows;
+      }).catch(function (err) {
+        console.log(err);
+      });
+    };
+
+    this.get = function(id){
+      console.log('get');
+      return $q.when($rootScope.sessiondb.get(id))
+      .then(function (result) {
+        console.log(result);
+        return result;
+      }).catch(function (err) {
+        console.log(err);
+      });
+    };
+
+    this.delete = function(doc){
+      console.log('delete');
+      return $q.when($rootScope.sessiondb.remove(doc))
+      .then(function (result) {
+        console.log(result);
+        return result;
+      }).catch(function (err) {
+        console.log(err);
+      });
+    };
+    
+  })
+
 .service('Rest', function ($q, $http, $cordovaDialogs, $state) {
     
     this.send = function (type, url, timeout, data, token, showTimeout){
@@ -40,7 +102,7 @@ angular.module('Training.services', [])
     };
   })
 
-.service('Auth', function ($q, $http, $cordovaDialogs, $state, Rest) {
+.service('Auth', function ($q, $http, $cordovaDialogs, $state, Rest, DB) {
     
     // This needs updating to handle saving token, and user details
     this.signup = function(data){
@@ -76,7 +138,13 @@ angular.module('Training.services', [])
         localStorage.setItem('token', result.data.token);
         localStorage.setItem('user_id', result.data.user._id);
         localStorage.setItem('user', JSON.stringify(result.data.user));
-        deferred.resolve(result.data);
+        DB.init().then(function(){
+          Rest.send('GET', '/sessions/user/' + result.data.user._id, 5000, null, result.data.token, false).then(function(result){
+            DB.bulkload('sessiondb', result).then(function(){
+              deferred.resolve();
+            });
+          });
+        });
       }, function (error){
         deferred.reject(error);
       });
@@ -84,6 +152,7 @@ angular.module('Training.services', [])
     };
 
     this.signout = function (){
+      DB.destroy();
       localStorage.removeItem('currentSession');
       localStorage.removeItem('token');
       localStorage.removeItem('user_id');
@@ -222,7 +291,7 @@ angular.module('Training.services', [])
 
   })
 
-  .service('Feed', function ($q, Rest) {
+  .service('Feed', function ($q, Rest, DB) {
     
     this.getAll = function(user){
       var token = localStorage.getItem('token');
@@ -239,14 +308,13 @@ angular.module('Training.services', [])
     };
 
     this.getCurrent = function(sessionId) {
-      var currentSessions = JSON.parse(localStorage.getItem('sessions'));
-      // Simple index lookup
-      for(var i=0; i < currentSessions.length; i++){
-        if(currentSessions[i]._id === sessionId){
-          return currentSessions[i];
-        }
-      }
-      return;
+      var deferred = $q.defer();
+      DB.get(sessionId).then(function(result){
+        deferred.resolve(result);
+      }, function(error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
     };
 
     this.deleteLocalSession = function(sessionId) {
@@ -263,8 +331,13 @@ angular.module('Training.services', [])
     };
 
     this.getLocal = function() {
-      var currentSessions = JSON.parse(localStorage.getItem('sessions'));
-      return currentSessions;
+      var deferred = $q.defer();
+      DB.bulkretrive().then(function(result){
+        deferred.resolve(result);
+      }, function(error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
     };
 
   })
