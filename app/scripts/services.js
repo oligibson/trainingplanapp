@@ -43,7 +43,6 @@ angular.module('Training.services', [])
       console.log('get');
       return $q.when($rootScope.sessiondb.get(id))
       .then(function (result) {
-        console.log(result);
         return result;
       }).catch(function (err) {
         console.log(err);
@@ -54,7 +53,6 @@ angular.module('Training.services', [])
       console.log('post');
       return $q.when($rootScope.sessiondb.post(doc))
       .then(function (result) {
-        console.log(result);
         return result;
       }).catch(function (err) {
         console.log(err);

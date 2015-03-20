@@ -135,7 +135,6 @@ angular.module('Training.controllers', [])
 
 	Record.getCurrentSession($stateParams.sessionId).then(function (result){
 		$scope.session = result;
-		console.log($scope.session);
 	}, function (error){
 		console.log(error);
 	});
