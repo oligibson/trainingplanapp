@@ -50,6 +50,17 @@ angular.module('Training.services', [])
       });
     };
 
+    this.post = function(doc){
+      console.log('post');
+      return $q.when($rootScope.sessiondb.post(doc))
+      .then(function (result) {
+        console.log(result);
+        return result;
+      }).catch(function (err) {
+        console.log(err);
+      });
+    };
+
     this.delete = function(doc){
       console.log('delete');
       return $q.when($rootScope.sessiondb.remove(doc))
@@ -210,19 +221,14 @@ angular.module('Training.services', [])
 
   })
 
-  .service('Record', function ($q, Rest) {
+  .service('Record', function ($q, Rest, DB) {
     
     this.create = function(data){
-      var token = localStorage.getItem('token');
-      var url = '/sessions';
-      var params = JSON.stringify(data);
-
+      console.log(data);
       var deferred = $q.defer();
-      Rest.send('POST', url, 5000, params, token, true)
-      .then(function (result){
-        localStorage.setItem('currentSession', JSON.stringify(result));
+      DB.post(data).then(function(result){
         deferred.resolve(result);
-      }, function (error){
+      }, function(error){
         deferred.reject(error);
       });
       return deferred.promise;
@@ -256,9 +262,14 @@ angular.module('Training.services', [])
       return deferred.promise;
     };
 
-    this.getCurrentSession = function(){
-      var session = JSON.parse(localStorage.getItem('currentSession'));
-      return session;
+    this.getCurrentSession = function(sessionId){
+      var deferred = $q.defer();
+      DB.get(sessionId).then(function(result){
+        deferred.resolve(result);
+      }, function(error){
+        deferred.reject(error);
+      });
+      return deferred.promise;
     };
 
     this.updateCurrentSession = function(session){

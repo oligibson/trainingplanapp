@@ -110,20 +110,20 @@ angular.module('Training.controllers', [])
 
 })
 
-.controller('RecordCtrl', function($scope, $location, $ionicHistory, $ionicTabsDelegate, Record) {
+.controller('RecordCtrl', function($scope, $state, $location, $ionicHistory, $ionicTabsDelegate, Record) {
 
-	$scope.session = { id: localStorage.getItem('user_id'), activity: 'Gym', name: Record.sessionName()};
+	$scope.session = { userId: localStorage.getItem('user_id'), activity: 'Gym', name: Record.sessionName(), completed: false};
 	$scope.button = 'Record Session';
 
 	$scope.createSession = function (){
 		$scope.button = 'Please Wait...';
 		$scope.session.date = new Date();
-		Record.create($scope.session).then(function (){
+		Record.create($scope.session).then(function (result){
 			$scope.button = 'Record Session';
 			$ionicHistory.nextViewOptions({
 				disableBack: true
 			});
-			$location.path('/tab/record/session');
+			$state.go('tab.record-session', { sessionId: result.id });
 		}, function (error){
 			$scope.button = 'Record Session';
 			console.log(error);
@@ -131,9 +131,14 @@ angular.module('Training.controllers', [])
 	};
 })
 
-.controller('RecordSessionCtrl', function($scope, $ionicActionSheet, $ionicPopup, $cordovaDialogs, $location, Record) {
+.controller('RecordSessionCtrl', function($scope, $stateParams, $ionicActionSheet, $ionicPopup, $cordovaDialogs, $location, Record) {
 
-	$scope.session = Record.getCurrentSession();
+	Record.getCurrentSession($stateParams.sessionId).then(function (result){
+		$scope.session = result;
+		console.log($scope.session);
+	}, function (error){
+		console.log(error);
+	});
 
 	$scope.addExercise = function (){
 		console.log('adding exercise');

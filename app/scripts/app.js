@@ -112,7 +112,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
 
     .state('tab.record-session', {
       cache: false,
-      url: '/record/session',
+      url: '/record/:sessionId',
       views: {
         'tab-record': {
           templateUrl: 'templates/record-session.html',
@@ -123,7 +123,7 @@ angular.module('Training', ['ionic', 'ngCordova', 'config', 'Training.controller
 
     .state('tab.record-complete', {
       cache: false,
-      url: '/record/session/complete',
+      url: '/record/:sessionId/complete',
       views: {
         'tab-record': {
           templateUrl: 'templates/record-complete.html',
